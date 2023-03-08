@@ -18,7 +18,6 @@ import Photos
 import UIKit
 
 import Firebase
-import GoogleMobileAds
 import FirebaseCrashlytics
 
 /**
@@ -43,7 +42,6 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   var storageRef: StorageReference!
   var remoteConfig: RemoteConfig!
 
-  @IBOutlet weak var banner: GADBannerView!
   @IBOutlet weak var clientTable: UITableView!
 
   override func viewDidLoad() {
@@ -61,10 +59,18 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   deinit {
   }
 
-  func configureDatabase() {
-  }
+    func configureDatabase() {
+      ref = Database.database().reference()
+      // Listen for new messages in the Firebase database
+      _refHandle = self.ref.child("messages").observe(.childAdded, with: { [weak self] (snapshot) -> Void in
+        guard let strongSelf = self else { return }
+        strongSelf.messages.append(snapshot)
+        strongSelf.clientTable.insertRows(at: [IndexPath(row: strongSelf.messages.count-1, section: 0)], with: .automatic)
+      })
+    }
 
   func configureStorage() {
+    storageRef = Storage.storage().reference()
   }
 
   func configureRemoteConfig() {
@@ -102,12 +108,40 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     return messages.count
   }
 
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    // Dequeue cell
-    let cell = self.clientTable.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
-
-    return cell
-  }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Dequeue cell
+        let cell = self.clientTable .dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
+        // Unpack message from Firebase DataSnapshot
+        let messageSnapshot: DataSnapshot! = self.messages[indexPath.row]
+        guard let message = messageSnapshot.value as? [String:String] else { return cell }
+        let name = message[Constants.MessageFields.name] ?? ""
+        if let imageURL = message[Constants.MessageFields.imageURL] {
+          if imageURL.hasPrefix("gs://") {
+            Storage.storage().reference(forURL: imageURL).getData(maxSize: INT64_MAX) {(data, error) in
+              if let error = error {
+                print("Error downloading: \(error)")
+                return
+              }
+              DispatchQueue.main.async {
+                cell.imageView?.image = UIImage.init(data: data!)
+                cell.setNeedsLayout()
+              }
+            }
+          } else if let URL = URL(string: imageURL), let data = try? Data(contentsOf: URL) {
+            cell.imageView?.image = UIImage.init(data: data)
+          }
+          cell.textLabel?.text = "sent by: \(name)"
+        } else {
+          let text = message[Constants.MessageFields.text] ?? ""
+          cell.textLabel?.text = name + ": " + text
+          cell.imageView?.image = UIImage(named: "ic_account_circle")
+          if let photoURL = message[Constants.MessageFields.photoURL], let URL = URL(string: photoURL),
+              let data = try? Data(contentsOf: URL) {
+            cell.imageView?.image = UIImage(data: data)
+          }
+        }
+        return cell
+      }
 
   // UITextViewDelegate protocol methods
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -119,8 +153,16 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     return true
   }
 
-  func sendMessage(withData data: [String: String]) {
-  }
+    func sendMessage(withData data: [String: String]) {
+       var mdata = data
+       mdata[Constants.MessageFields.name] = Auth.auth().currentUser?.displayName
+       if let photoURL = Auth.auth().currentUser?.photoURL {
+         mdata[Constants.MessageFields.photoURL] = photoURL.absoluteString
+       }
+
+       // Push data to Firebase Database
+       self.ref.child("messages").childByAutoId().setValue(mdata)
+     }
 
   // MARK: - Image Picker
 
@@ -148,16 +190,37 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     if #available(iOS 8.0, *), let referenceURL = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.referenceURL)] as? URL {
       let assets = PHAsset.fetchAssets(withALAssetURLs: [referenceURL], options: nil)
       let asset = assets.firstObject
-      asset?.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
+      asset?.requestContentEditingInput(with: nil, completionHandler: { [weak self] (contentEditingInput, info) in
         let imageFile = contentEditingInput?.fullSizeImageURL
         let filePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\((referenceURL as AnyObject).lastPathComponent!)"
+          guard let strongSelf = self else { return }
+          strongSelf.storageRef.child(filePath)
+            .putFile(from: imageFile!, metadata: nil) { (metadata, error) in
+              if let error = error {
+                let nsError = error as NSError
+                print("Error uploading: \(nsError.localizedDescription)")
+                return
+              }
+              strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+            }
       })
     } else {
       guard let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage else { return }
       let imageData = image.jpegData(compressionQuality: 0.8)
       guard let uid = Auth.auth().currentUser?.uid else { return }
       let imagePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
-    }
+      let metadata = StorageMetadata()
+      metadata.contentType = "image/jpeg"
+      self.storageRef.child(imagePath)
+        .putData(imageData!, metadata: metadata) { [weak self] (metadata, error) in
+          if let error = error {
+            print("Error uploading: \(error)")
+            return
+          }
+          guard let strongSelf = self else { return }
+          strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+        }
+      }
   }
 
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

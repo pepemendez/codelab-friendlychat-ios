@@ -20,7 +20,7 @@ import Firebase
 import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
@@ -29,14 +29,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                    open url: URL,
                    options: [UIApplication.OpenURLOptionsKey : Any])
     -> Bool {
-    return GIDSignIn.sharedInstance().handle(url)
+        return GIDSignIn.sharedInstance.handle(url)
+//    return GIDSignIn.sharedInstance().handle(url)
   }
 
   func application(_ application: UIApplication,
                    open url: URL,
                    sourceApplication: String?,
                    annotation: Any) -> Bool {
-    return GIDSignIn.sharedInstance().handle(url)
+      return GIDSignIn.sharedInstance.handle(url)
+//    return GIDSignIn.sharedInstance().handle(url)
   }
 
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
@@ -44,11 +46,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
       print("Error \(error)")
       return
     }
+      
+      guard let authentication = user else { return }
+      let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken!.tokenString,
+                                                     accessToken: authentication.accessToken.tokenString)
+      Auth.auth().signIn(with: credential) { (user, error) in
+        if let error = error {
+          print("Error \(error)")
+          return
+        }
+      }
   }
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions
     launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    GIDSignIn.sharedInstance().delegate = self
+      FirebaseApp.configure()
+      GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: FirebaseApp.app()!.options.clientID!)
+//    GIDSignIn.sharedInstance().delegate = self
     return true
   }
 }

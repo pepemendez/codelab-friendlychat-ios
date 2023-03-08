@@ -26,9 +26,72 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    GIDSignIn.sharedInstance()?.presentingViewController = self
+      
+    signed()
   }
 
-  deinit {
-  }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+    }
+    
+    deinit {
+       if let handle = handle {
+         Auth.auth().removeStateDidChangeListener(handle)
+       }
+     }
+    
+    func signed(){
+        GIDSignIn.sharedInstance.restorePreviousSignIn(){
+            result, error in
+            
+            print("result: \(result)")
+            
+            if(error != nil){
+                print("error")
+            }
+        }
+        handle = Auth.auth().addStateDidChangeListener() { (auth, user) in
+          if user != nil {
+            MeasurementHelper.sendLoginEvent()
+            self.performSegue(withIdentifier: Constants.Segues.SignInToFp, sender: nil)
+          }
+        }
+    }
+    
+   @objc func signIn(){
+        GIDSignIn.sharedInstance.signIn(withPresenting: self){
+            result, error in
+            
+            if(result != nil){
+                guard let authentication = result?.user else { return }
+                let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken!.tokenString,
+                                                               accessToken: authentication.accessToken.tokenString)
+                Auth.auth().signIn(with: credential) { (user, error) in
+                  if let error = error {
+                    print("Error \(error)")
+                    return
+                  }
+                    else{
+                        self.signed()
+                    }
+                }
+            }
+            
+            if(error != nil){
+                print("error")
+            }
+        }
+    }
+    
+    @IBAction func signOut(_ sender: UIButton) {
+      let firebaseAuth = Auth.auth()
+      do {
+        try firebaseAuth.signOut()
+        dismiss(animated: true, completion: nil)
+      } catch let signOutError as NSError {
+        print ("Error signing out: \(signOutError.localizedDescription)")
+      }
+    }
 }
