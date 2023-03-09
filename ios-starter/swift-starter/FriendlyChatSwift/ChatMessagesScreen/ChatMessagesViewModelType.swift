@@ -12,11 +12,15 @@ import RxSwift
 
 struct ChatMessagesTypeInput {
     let trigger: Driver<Void>
-    let selectionTrigger: Driver<Int>
+    let sendTrigger: Driver<Void>
+    let photoTrigger: Driver<Void>
+    let messageTrigger: Driver<String>
 }
 
 struct ChatMessagesTypeOutput {
     let triggered: Driver<Void>
-    let selectionTriggered: Driver<Void>
+    let sendTriggered: Driver<Void>
+    let photoTriggered: Driver<Void>
+    let messageTriggered: Driver<Void>
     let error: Driver<String>?
 }

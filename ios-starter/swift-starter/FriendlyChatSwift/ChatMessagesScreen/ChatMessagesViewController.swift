@@ -59,13 +59,24 @@ class ChatMessagesViewController: UIViewController {
             }
             .asDriver()
         
+        let sendTrigger = self.mainView.sendSubject
+            .asDriverOnErrorJustComplete()
+                
+        let photoTrigger = self.mainView.photoSubject
+            .asDriverOnErrorJustComplete()
+        
+        let messageTrigger = self.mainView.messageSubject
+            .asDriverOnErrorJustComplete()
+        
         let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewWillAppear(_:)))
                             .take(1)
                             .mapToVoid()
                             .asDriverOnErrorJustComplete()
         
         let input = ChatMessagesTypeInput(trigger: viewWillAppear,
-                                   selectionTrigger: selectionTrigger)
+                                          sendTrigger: sendTrigger,
+                                          photoTrigger: photoTrigger,
+                                          messageTrigger: messageTrigger)
         
         let output = self.viewModel.transform(input: input)
         
@@ -75,7 +86,17 @@ class ChatMessagesViewController: UIViewController {
             .disposed(by: self.disposeBag)
         
         output
-            .selectionTriggered
+            .sendTriggered
+            .drive()
+            .disposed(by: self.disposeBag)
+        
+        output
+            .photoTriggered
+            .drive()
+            .disposed(by: self.disposeBag)
+        
+        output
+            .messageTriggered
             .drive()
             .disposed(by: self.disposeBag)
     }

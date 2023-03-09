@@ -47,17 +47,34 @@ class ChatMessagesViewModel: ViewModelType{
                         .disposed(by: self.disposeBag)
                 }
                 .mapToVoid()
-        
-        let buttonActionTapped =
-                input.selectionTrigger
-                .do(onNext:{ index in
-                    print("buttonActionTapped \(index)")
-                })
-                .mapToVoid()
-                .asDriver()
+                
+        let sendTriggered =    input
+            .sendTrigger
+            .do(onNext:{
+                print("sendTriggered")
+            })
+            .asDriver()
+                
+        let photoTriggered =   input
+            .photoTrigger
+            .do(onNext:{
+                print("photoTrigger")
+            })
+            .asDriver()
                     
-                return Output(triggered: triggered,
-                              selectionTriggered: buttonActionTapped,
-                              error: self.errorTracker.asDriverOnErrorJustComplete())
+        let messageTriggered =  input
+            .messageTrigger
+            .do(onNext:{ msg in
+                print("messageTrigger \(msg)")
+            })
+            .mapToVoid()
+            .asDriver()
+                    
+                    
+            return Output(triggered: triggered,
+                  sendTriggered: sendTriggered,
+                  photoTriggered: photoTriggered,
+                  messageTriggered: messageTriggered,
+                  error: self.errorTracker.asDriverOnErrorJustComplete())
     }
 }

@@ -10,15 +10,39 @@ import RxSwift
 import RxCocoa
 import Firebase
 
+class TextFieldWithPadding: UITextView {
+    var textPadding = UIEdgeInsets(
+        top: 0,
+        left: 8,
+        bottom: 0,
+        right: 8
+    )
+
+//    override func textRect(forBounds bounds: CGRect) -> CGRect {
+//        let rect = super.textRect(forBounds: bounds)
+//        return rect.inset(by: textPadding)
+//    }
+//
+//    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+//        let rect = super.editingRect(forBounds: bounds)
+//        return rect.inset(by: textPadding)
+//    }
+}
+
 class ChatMessagesView: UIView {
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
     public var selectedTrigger: Driver<ControlEvent<IndexPath>.Element>
+    private let disposeBag = DisposeBag()
+    public let photoSubject: PublishSubject<Void> = PublishSubject()
+    public let sendSubject: PublishSubject<Void> = PublishSubject()
+    public let messageSubject: PublishSubject<String> = PublishSubject<String>()
+
     public let tableView: UITableView = {
         let table = UITableView(frame: CGRect.zero)
         return table
     }()
     
-    public let stackView: UIStackView = {
+    private let stackView: UIStackView = {
        let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
@@ -29,23 +53,25 @@ class ChatMessagesView: UIView {
         return stackView
     }()
     
-    public let textField: UITextField = {
-        let textField = UITextField()
+    private let textField: TextFieldWithPadding = {
+        let textField = TextFieldWithPadding()
         textField.clipsToBounds = true
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 6
         textField.layer.masksToBounds = false
+        textField.isScrollEnabled = false
+        textField.font = UIFont.systemFont(ofSize: 15.0)
         return textField
     }()
     
-    public let sendButton: UIButton = {
+    private let sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Enviar", for: .normal)
         return button
     }()
     
-    public let photoButton: UIButton = {
+    private let photoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "ic_add_a_photo"), for: .normal)
         return button
@@ -96,6 +122,22 @@ class ChatMessagesView: UIView {
         ]
         self.addConstraints(constraints)
         bindModel()
+        
+        self.photoButton.rx
+            .tap
+            .bind(to: self.photoSubject)
+            .disposed(by: self.disposeBag)
+        
+        self.sendButton.rx
+            .tap
+            .bind(to: self.sendSubject)
+            .disposed(by: self.disposeBag)
+        
+        self.textField.rx
+            .text
+            .orEmpty
+            .bind(to: self.messageSubject)
+            .disposed(by: self.disposeBag)
     }
     
     private func bindModel() {
@@ -130,6 +172,8 @@ class ChatMessagesView: UIView {
                 print(indexPath)
                 self?.tableView.deselectRow(at: indexPath, animated: true)
             })
+        
+        
     }
     
     required init?(coder _: NSCoder) {
