@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import Firebase
 
 class ChatMessagesView: UIView {
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
@@ -53,8 +54,26 @@ class ChatMessagesView: UIView {
             .bind(to: tableView.rx
                 .items(cellIdentifier: "Cell", cellType: ChatMessagesViewCell.self))
             { index, element, cell in
-                cell.lblTitle.text = element["name"] as? String
-                cell.lblMessage.text = element["text"] as? String
+
+                guard let message = element as? [String:String] else { return }
+                cell.setView(message: message)
+                if let imageURL = message[Constants.MessageFields.imageURL] {
+                    if imageURL.hasPrefix("gs://") {
+                        Storage.storage().reference(forURL: imageURL).getData(maxSize: INT64_MAX) {(data, error) in
+                          if let error = error {
+                            print("Error downloading: \(error)")
+                            return
+                          }
+                          DispatchQueue.main.async {
+                            cell.imageView?.image = UIImage.init(data: data!)
+                            cell.imageView?.layer.masksToBounds = false
+                            cell.imageView?.layer.cornerRadius = 0
+                            cell.imageView?.clipsToBounds = true
+                            cell.setNeedsLayout()
+                          }
+                        }
+                    }
+                }
         }
         
         let _ = self.selectedTrigger
