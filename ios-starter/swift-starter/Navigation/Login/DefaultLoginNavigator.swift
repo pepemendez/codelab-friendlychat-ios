@@ -18,9 +18,13 @@ class LoginNavigatorDefault: LoginNavigatorProtocol{
     }
     
     func Logged() {
-        self.navigationController
-            .topViewController?
-            .performSegue(withIdentifier: Constants.Segues.SignInToFp, sender: nil)
+//        self.navigationController
+//            .topViewController?
+//            .performSegue(withIdentifier: Constants.Segues.SignInToFp, sender: nil)
+        let navigator = ChatNavigatorDefault(navigationController: self.navigationController)
+        let viewController = ChatSelectionViewController(with: ChatSelectionViewModel(navigator: navigator))
+        self.navigationController.navigationBar.isHidden = true
+        self.navigationController.pushViewController(viewController, animated: true)
     }
     
     func Error() {

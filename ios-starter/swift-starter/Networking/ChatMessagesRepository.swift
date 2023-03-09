@@ -1,0 +1,43 @@
+//
+//  ChatRepository.swift
+//  FriendlyChatSwift
+//
+//  Created by Jose Mendez on 09/03/23.
+//  Copyright © 2023 Google Inc. All rights reserved.
+//
+
+import Foundation
+import FirebaseFirestore
+import RxSwift
+import RxCocoa
+
+class ChatMessagesRepository {
+    let db = Firestore.firestore()
+    private var ref: CollectionReference!
+    private var messages: PublishSubject<[String : Any]> = PublishSubject<[String : Any]>()
+    
+    init(){
+    }
+    
+    func getMessages(byRoomId: String) -> Observable<[String: Any]>{
+        Firestore.firestore().clearPersistence()
+        ref = Firestore.firestore().collection("messages").document("ynH1LhJkp9DXVz5OHfjS").collection("messages")
+        ref.addSnapshotListener({ [weak self] (snapshot, error) in
+            guard let strongSelf = self else { return }
+
+            guard let snapshot = snapshot else {
+              print("Error fetching snapshot results: \(error!)")
+              return
+            }
+            
+            let _ = snapshot.documentChanges.map { (document) in
+                if(document.type == .added){
+                    strongSelf.messages.onNext(document.document.data())
+                }
+            }
+          })
+        
+        return messages;
+    }
+    
+}

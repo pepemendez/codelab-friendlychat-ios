@@ -38,11 +38,9 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   @IBOutlet weak var sendButton: UIButton!
   var ref: CollectionReference!
   var messages: [[String: Any]] = []
-  var msglength: NSNumber = 10
-  fileprivate var _refHandle: DatabaseHandle!
+  var msglength: NSNumber = 256
 
   var storageRef: StorageReference!
-  var remoteConfig: RemoteConfig!
 
   @IBOutlet weak var clientTable: UITableView!
 
@@ -62,8 +60,10 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   }
 
     func configureDatabase() {
+        
+        Firestore.firestore().clearPersistence()
     
-      ref = Firestore.firestore().collection("msgtesting")
+        ref = Firestore.firestore().collection("messages").document("ynH1LhJkp9DXVz5OHfjS").collection("messages")
         
         ref.addSnapshotListener({ [weak self] (snapshot, error) in
             guard let strongSelf = self else { return }
