@@ -28,12 +28,6 @@ import FirebaseCrashlytics
 //    let imageUrl: String? = nil
 //}
 
-/**
- * AdMob ad unit IDs are not currently stored inside the google-services.plist file. Developers
- * using AdMob can store them as custom values in another plist, or simply use constants. Note that
- * these ad units are configured to return only test ads, and should not be used outside this sample.
- */
-let kBannerAdUnitID = "ca-app-pub-3940256099942544/2934735716"
 
 @objc(FCViewController)
 class FCViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,

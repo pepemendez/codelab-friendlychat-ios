@@ -12,23 +12,6 @@ import RxCocoa
 import GoogleSignIn
 import Firebase
 
-
-
-struct LoginTypeInput {
-    let trigger: Driver<Void>
-    let btnActionTap: Driver<UIViewController>
-}
-
-struct LoginTypeOutput {
-    let triggered: Driver<Void>
-    let logged: Driver<Void>
-    let btnActionTapped: Driver<Void>
-    let error: Driver<String>?
-}
-
-
-
-
 class SignInViewModel: ViewModelType{
     typealias Input = LoginTypeInput
     

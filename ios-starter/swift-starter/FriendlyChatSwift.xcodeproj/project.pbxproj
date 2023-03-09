@@ -46,6 +46,7 @@
 		36BF84E929B97141001E0410 /* DefaultLoginNavigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLoginNavigator.swift; sourceTree = "<group>"; };
 		36BF84EC29B975B0001E0410 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		36BF84EE29B975D4001E0410 /* RxSwift+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+ext.swift"; sourceTree = "<group>"; };
+		36BF84F029B976A7001E0410 /* LoginViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelType.swift; sourceTree = "<group>"; };
 		5F5A53791ADE67D500F81DF0 /* FriendlyChatSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendlyChatSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCViewController.swift; sourceTree = "<group>"; };
@@ -372,6 +373,7 @@
 				2CA807BC1B21702E009AD7F2 /* MeasurementHelper.swift in Sources */,
 				36BF84EF29B975D4001E0410 /* RxSwift+ext.swift in Sources */,
 				36BF84ED29B975B0001E0410 /* ViewModelType.swift in Sources */,
+				36BF84F129B976A7001E0410 /* LoginViewModelType.swift in Sources */,
 				2C595F061B34B73A00355AE7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
