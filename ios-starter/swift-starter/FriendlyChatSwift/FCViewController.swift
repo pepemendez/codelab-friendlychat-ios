@@ -18,7 +18,15 @@ import Photos
 import UIKit
 
 import Firebase
+import FirebaseFirestore
 import FirebaseCrashlytics
+
+//class ChatMessage {
+//    let name: String = ""
+//    let photoUrl: String? = nil
+//    let text: String? = nil
+//    let imageUrl: String? = nil
+//}
 
 /**
  * AdMob ad unit IDs are not currently stored inside the google-services.plist file. Developers
@@ -34,8 +42,8 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   // Instance variables
   @IBOutlet weak var textField: UITextField!
   @IBOutlet weak var sendButton: UIButton!
-  var ref: DatabaseReference!
-  var messages: [DataSnapshot] = []
+  var ref: CollectionReference!
+  var messages: [[String: Any]] = []
   var msglength: NSNumber = 10
   fileprivate var _refHandle: DatabaseHandle!
 
@@ -60,13 +68,25 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
   }
 
     func configureDatabase() {
-      ref = Database.database().reference()
-      // Listen for new messages in the Firebase database
-      _refHandle = self.ref.child("messages").observe(.childAdded, with: { [weak self] (snapshot) -> Void in
-        guard let strongSelf = self else { return }
-        strongSelf.messages.append(snapshot)
-        strongSelf.clientTable.insertRows(at: [IndexPath(row: strongSelf.messages.count-1, section: 0)], with: .automatic)
-      })
+    
+      ref = Firestore.firestore().collection("msgtesting")
+        
+        ref.addSnapshotListener({ [weak self] (snapshot, error) in
+            guard let strongSelf = self else { return }
+
+            guard let snapshot = snapshot else {
+              print("Error fetching snapshot results: \(error!)")
+              return
+            }
+            
+            // Listen for new messages in the Firebase database
+            let documents = snapshot.documentChanges.map { (document) in
+                if(document.type == .added){
+                    strongSelf.messages.append(document.document.data())
+                    strongSelf.clientTable.insertRows(at: [IndexPath(row: strongSelf.messages.count-1, section: 0)], with: .automatic)
+                }
+            }
+          })
     }
 
   func configureStorage() {
@@ -112,8 +132,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         // Dequeue cell
         let cell = self.clientTable .dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
         // Unpack message from Firebase DataSnapshot
-        let messageSnapshot: DataSnapshot! = self.messages[indexPath.row]
-        guard let message = messageSnapshot.value as? [String:String] else { return cell }
+        guard let message = self.messages[indexPath.row] as? [String:String] else { return cell }
         let name = message[Constants.MessageFields.name] ?? ""
         if let imageURL = message[Constants.MessageFields.imageURL] {
           if imageURL.hasPrefix("gs://") {
@@ -161,7 +180,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
        }
 
        // Push data to Firebase Database
-       self.ref.child("messages").childByAutoId().setValue(mdata)
+       self.ref.addDocument(data: mdata)
      }
 
   // MARK: - Image Picker
@@ -219,8 +238,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
           }
           guard let strongSelf = self else { return }
           strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
-        }
       }
+    }
   }
 
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
