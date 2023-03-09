@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseFirestore
 import RxSwift
 import RxCocoa
@@ -38,6 +39,16 @@ class ChatMessagesRepository {
           })
         
         return messages;
+    }
+    
+    func setMesssage(toRoomId room: String, withData data: [String: String]){
+        var mdata = data
+        mdata[Constants.MessageFields.name] = Auth.auth().currentUser?.displayName
+        if let photoURL = Auth.auth().currentUser?.photoURL {
+          mdata[Constants.MessageFields.photoURL] = photoURL.absoluteString
+        }
+
+        self.ref.addDocument(data: mdata)
     }
     
 }

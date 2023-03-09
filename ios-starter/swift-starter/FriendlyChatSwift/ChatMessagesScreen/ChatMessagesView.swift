@@ -130,6 +130,10 @@ class ChatMessagesView: UIView {
         
         self.sendButton.rx
             .tap
+            .do(onNext: {
+                self.textField.text = ""
+                self.endEditing(true)
+            })
             .bind(to: self.sendSubject)
             .disposed(by: self.disposeBag)
         

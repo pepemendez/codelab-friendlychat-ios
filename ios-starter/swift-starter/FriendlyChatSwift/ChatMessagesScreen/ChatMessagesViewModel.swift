@@ -22,6 +22,7 @@ class ChatMessagesViewModel: ViewModelType{
     private let navigator: ChatNavigatorProtocol
     private let repository: ChatMessagesRepository
     private let chatId: String
+    private var chatMessage: String = ""
     
     public var messages: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
 
@@ -52,10 +53,14 @@ class ChatMessagesViewModel: ViewModelType{
             .sendTrigger
             .do(onNext:{
                 print("sendTriggered")
+                let data = [Constants.MessageFields.text:self.chatMessage]
+
+                self.repository
+                    .setMesssage(toRoomId: self.chatId, withData: data)
             })
             .asDriver()
                 
-        let photoTriggered =   input
+        let photoTriggered = input
             .photoTrigger
             .do(onNext:{
                 print("photoTrigger")
@@ -66,6 +71,7 @@ class ChatMessagesViewModel: ViewModelType{
             .messageTrigger
             .do(onNext:{ msg in
                 print("messageTrigger \(msg)")
+                self.chatMessage = msg
             })
             .mapToVoid()
             .asDriver()
