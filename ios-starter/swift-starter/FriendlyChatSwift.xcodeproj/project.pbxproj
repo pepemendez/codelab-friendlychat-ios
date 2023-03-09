@@ -17,6 +17,12 @@
 		2CA807BC1B21702E009AD7F2 /* MeasurementHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA807BB1B21702E009AD7F2 /* MeasurementHelper.swift */; };
 		3624E5FBA1FCE310028CD187 /* Pods_FriendlyChatSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2731AC3F4EECC799E086A524 /* Pods_FriendlyChatSwift.framework */; };
 		36BF84DF29B94BCC001E0410 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 36BF84DE29B94BCC001E0410 /* GoogleService-Info.plist */; };
+		36BF84E329B96815001E0410 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84E229B96815001E0410 /* SignInView.swift */; };
+		36BF84E529B969F3001E0410 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84E429B969F3001E0410 /* SignInViewModel.swift */; };
+		36BF84E829B9712D001E0410 /* LoginNavigatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84E729B9712D001E0410 /* LoginNavigatorProtocol.swift */; };
+		36BF84EA29B97141001E0410 /* DefaultLoginNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84E929B97141001E0410 /* DefaultLoginNavigator.swift */; };
+		36BF84ED29B975B0001E0410 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84EC29B975B0001E0410 /* ViewModelType.swift */; };
+		36BF84EF29B975D4001E0410 /* RxSwift+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF84EE29B975D4001E0410 /* RxSwift+ext.swift */; };
 		5F5A537E1ADE67D500F81DF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */; };
 		5F5A53801ADE67D500F81DF0 /* FCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +40,12 @@
 		2C8E6C2A1B16875B0073CE3D /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		2CA807BB1B21702E009AD7F2 /* MeasurementHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementHelper.swift; sourceTree = "<group>"; };
 		36BF84DE29B94BCC001E0410 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		36BF84E229B96815001E0410 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		36BF84E429B969F3001E0410 /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		36BF84E729B9712D001E0410 /* LoginNavigatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigatorProtocol.swift; sourceTree = "<group>"; };
+		36BF84E929B97141001E0410 /* DefaultLoginNavigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLoginNavigator.swift; sourceTree = "<group>"; };
+		36BF84EC29B975B0001E0410 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
+		36BF84EE29B975D4001E0410 /* RxSwift+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+ext.swift"; sourceTree = "<group>"; };
 		5F5A53791ADE67D500F81DF0 /* FriendlyChatSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendlyChatSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +68,7 @@
 		10AF4CD51DD23A7E0096D192 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				36BF84EB29B97579001E0410 /* Helpers */,
 				10AF4CD61DD23A7E0096D192 /* assets */,
 				10AF4CD81DD23A7E0096D192 /* Bladefile */,
 				10AF4CD91DD23A7E0096D192 /* Images.xcassets */,
@@ -72,9 +85,38 @@
 			path = assets;
 			sourceTree = "<group>";
 		};
+		36BF84E029B960C1001E0410 /* LoginScreen */ = {
+			isa = PBXGroup;
+			children = (
+				2C8E6C2A1B16875B0073CE3D /* SignInViewController.swift */,
+				36BF84E229B96815001E0410 /* SignInView.swift */,
+				36BF84E429B969F3001E0410 /* SignInViewModel.swift */,
+			);
+			path = LoginScreen;
+			sourceTree = "<group>";
+		};
+		36BF84E629B970FD001E0410 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				36BF84E729B9712D001E0410 /* LoginNavigatorProtocol.swift */,
+				36BF84E929B97141001E0410 /* DefaultLoginNavigator.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		36BF84EB29B97579001E0410 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				36BF84EC29B975B0001E0410 /* ViewModelType.swift */,
+				36BF84EE29B975D4001E0410 /* RxSwift+ext.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		5F5A53431ADE670C00F81DF0 = {
 			isa = PBXGroup;
 			children = (
+				36BF84E629B970FD001E0410 /* Navigation */,
 				36BF84DE29B94BCC001E0410 /* GoogleService-Info.plist */,
 				10AF4CD51DD23A7E0096D192 /* shared */,
 				5F5A537A1ADE67D500F81DF0 /* FriendlyChatSwift */,
@@ -95,10 +137,10 @@
 		5F5A537A1ADE67D500F81DF0 /* FriendlyChatSwift */ = {
 			isa = PBXGroup;
 			children = (
+				36BF84E029B960C1001E0410 /* LoginScreen */,
 				5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */,
 				5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */,
 				2CA807BB1B21702E009AD7F2 /* MeasurementHelper.swift */,
-				2C8E6C2A1B16875B0073CE3D /* SignInViewController.swift */,
 				2C595F041B34B73A00355AE7 /* Constants.swift */,
 				5F5A537B1ADE67D500F81DF0 /* Supporting Files */,
 			);
@@ -264,6 +306,9 @@
 				"${BUILT_PRODUCTS_DIR}/Libuv-gRPC/uv.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
@@ -296,6 +341,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/uv.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Promises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
@@ -314,10 +362,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36BF84E329B96815001E0410 /* SignInView.swift in Sources */,
+				36BF84EA29B97141001E0410 /* DefaultLoginNavigator.swift in Sources */,
+				36BF84E529B969F3001E0410 /* SignInViewModel.swift in Sources */,
 				2C8E6C2B1B16875B0073CE3D /* SignInViewController.swift in Sources */,
 				5F5A53801ADE67D500F81DF0 /* FCViewController.swift in Sources */,
 				5F5A537E1ADE67D500F81DF0 /* AppDelegate.swift in Sources */,
+				36BF84E829B9712D001E0410 /* LoginNavigatorProtocol.swift in Sources */,
 				2CA807BC1B21702E009AD7F2 /* MeasurementHelper.swift in Sources */,
+				36BF84EF29B975D4001E0410 /* RxSwift+ext.swift in Sources */,
+				36BF84ED29B975B0001E0410 /* ViewModelType.swift in Sources */,
 				2C595F061B34B73A00355AE7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
