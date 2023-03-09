@@ -22,7 +22,7 @@ class ChatSelectionViewModel: ViewModelType{
     private let navigator: ChatNavigatorProtocol
     private let repository: ChatRoomsRepository
     
-    public var messages: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
+    public var chat: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
 
     init(navigator: ChatNavigatorProtocol) {
         self.navigator = navigator
@@ -33,7 +33,7 @@ class ChatSelectionViewModel: ViewModelType{
         let triggered = input.trigger
                 .map{
                     self.repository.chatRooms
-                        .bind(to: self.messages)
+                        .bind(to: self.chat)
                         .disposed(by: self.disposeBag)
                 }
                 .mapToVoid()
@@ -41,8 +41,8 @@ class ChatSelectionViewModel: ViewModelType{
         let buttonActionTapped =
                 input.selectionTrigger
                 .do(onNext:{ index in
-                    print("buttonActionTapped \(index) \(self.messages.value[index])")
-                    self.navigator.goToChat(id: self.messages.value[index]["id"] as! String)
+                    print("buttonActionTapped \(index) \(self.chat.value[index])")
+                    self.navigator.goToChat(id: self.chat.value[index]["id"] as! String)
                 })
                 .mapToVoid()
                 .asDriver()

@@ -21,8 +21,8 @@ class ChatMessagesRepository {
     }
     
     func getMessages(byRoomId room: String) -> Observable<[String: Any]>{
-        Firestore.firestore().clearPersistence()
-        ref = Firestore.firestore().collection("messages").document(room).collection("messages")
+        db.clearPersistence()
+        ref = db.collection("messages").document(room).collection("messages")
         ref.addSnapshotListener({ [weak self] (snapshot, error) in
             guard let strongSelf = self else { return }
 

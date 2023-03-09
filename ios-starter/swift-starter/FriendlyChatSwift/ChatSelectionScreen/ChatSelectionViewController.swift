@@ -48,14 +48,7 @@ class ChatSelectionViewController: UIViewController {
     }
     
     private func bindViewModel(){
-        self.mainView.dataModel
-            .asDriver()
-            .drive(onNext:{ _ in
-                print("self.mainView.dataModel")
-            })
-            .disposed(by: self.disposeBag)
-        
-        self.viewModel.messages.asObservable()
+        self.viewModel.chat
             .bind(to: mainView.dataModel)
             .disposed(by: self.disposeBag)
         

@@ -140,10 +140,10 @@ class ChatMessagesView: UIView {
                             return
                           }
                           DispatchQueue.main.async {
-                            cell.imageView?.image = UIImage.init(data: data!)
-                            cell.imageView?.layer.masksToBounds = false
-                            cell.imageView?.layer.cornerRadius = 0
-                            cell.imageView?.clipsToBounds = true
+                            cell.icon.image = UIImage.init(data: data!)
+                            cell.icon.layer.masksToBounds = false
+                            cell.icon.layer.cornerRadius = 0
+                            cell.icon.clipsToBounds = true
                             cell.setNeedsLayout()
                           }
                         }

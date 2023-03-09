@@ -36,17 +36,25 @@ class ChatRoomsRepository {
                     self?.ref.document(document.document.documentID).collection("users").document("userList")
                         .addSnapshotListener({
                             [weak self] (snapshot, error) in
-                                guard let strongSelf = self else { return }
+                            guard let strongSelf = self else { return }
 
-                                guard let _ = snapshot else {
-                                  print("Error fetching snapshot results: \(error!)")
-                                  return
-                                }
+                            guard let snapshot = snapshot else {
+                              print("Error fetching snapshot results: \(error!)")
+                              return
+                            }
                             
                             var dictionary: [String: Any] =
                             ["name": document.document.documentID]
                             dictionary["isPublic"] = true
                             dictionary["id"] = document.document.data()["id"]
+                            if let active_users = (snapshot.data()?["users"] as? NSArray)?.count {
+                                dictionary["active_users"] = "\(active_users) usuarios activos"
+                            }
+                            else{
+                                dictionary["active_users"] = "Público"
+                            }
+                            print(document.document.data())
+                            print(snapshot.data())
                             
                             var newMessages = strongSelf.chatRooms.value
                             newMessages.append(dictionary)

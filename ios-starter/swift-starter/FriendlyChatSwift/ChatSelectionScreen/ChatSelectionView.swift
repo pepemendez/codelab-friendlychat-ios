@@ -54,6 +54,7 @@ class ChatSelectionView: UIView {
                 .items(cellIdentifier: "Cell", cellType: ChatSelectionViewCell.self))
             { index, element, cell in
                 cell.lblTitle.text = element["name"] as? String
+                cell.lblMessage.text = element["active_users"] as? String
         }
         
         let _ = self.selectedTrigger

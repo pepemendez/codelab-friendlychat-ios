@@ -22,9 +22,11 @@ class SignInViewModel: ViewModelType{
     private let errorTracker: PublishSubject<String> = PublishSubject<String>()
     private var handle: AuthStateDidChangeListenerHandle?
     private let navigator: LoginNavigatorProtocol
+    private let repository: UsersRepository
     
     init(navigator: LoginNavigatorProtocol) {
         self.navigator = navigator
+        self.repository = UsersRepository()
     }
     
     deinit {
@@ -39,7 +41,18 @@ class SignInViewModel: ViewModelType{
             .observe(on: MainScheduler.instance)
             .do(onNext:{
                 _ in
-                self.navigator.Logged()
+                self.repository
+                    .getUser()
+                    .do(onNext: { user in
+                        print(user)
+                        if user != nil {
+                            self.navigator.Logged()
+                        }
+                    })
+                    .asDriverOnErrorJustComplete()
+                    .drive()
+                    .disposed(by: self.disposeBag)
+                        
             })
         
         let triggered = input.trigger.do(onNext: {
