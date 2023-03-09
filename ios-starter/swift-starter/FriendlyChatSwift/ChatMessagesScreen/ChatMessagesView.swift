@@ -31,7 +31,7 @@ class ChatMessagesView: UIView {
         
         addSubview(self.tableView)
         
-        self.tableView.register(ChatSelectionViewCell.self, forCellReuseIdentifier: "Cell")
+        self.tableView.register(ChatMessagesViewCell.self, forCellReuseIdentifier: "Cell")
         
         
         self.tableView.separatorStyle = .none
@@ -51,9 +51,10 @@ class ChatMessagesView: UIView {
     private func bindModel() {
         let _ = self.dataModel
             .bind(to: tableView.rx
-                .items(cellIdentifier: "Cell", cellType: ChatSelectionViewCell.self))
+                .items(cellIdentifier: "Cell", cellType: ChatMessagesViewCell.self))
             { index, element, cell in
                 cell.lblTitle.text = element["name"] as? String
+                cell.lblMessage.text = element["text"] as? String
         }
         
         let _ = self.selectedTrigger

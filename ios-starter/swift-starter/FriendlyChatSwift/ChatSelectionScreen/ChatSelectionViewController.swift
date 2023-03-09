@@ -23,7 +23,7 @@ class ChatSelectionViewController: UIViewController {
         mainView = ChatSelectionView()
         
         super.init(nibName: nil, bundle: nil)
-        edgesForExtendedLayout = []
+        edgesForExtendedLayout = UIRectEdge()
     }
     
     required init?(coder _: NSCoder) {
@@ -36,7 +36,10 @@ class ChatSelectionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.view.backgroundColor = .white
+        self.navigationItem.setHidesBackButton(true, animated:true)
+        self.title = "Mis chats"
     }
 
     override func viewDidLoad() {

@@ -23,7 +23,7 @@ class ChatMessagesViewController: UIViewController {
         mainView = ChatMessagesView()
         
         super.init(nibName: nil, bundle: nil)
-        edgesForExtendedLayout = []
+        edgesForExtendedLayout = UIRectEdge()
     }
     
     required init?(coder _: NSCoder) {

@@ -41,8 +41,8 @@ class ChatSelectionViewModel: ViewModelType{
         let buttonActionTapped =
                 input.selectionTrigger
                 .do(onNext:{ index in
-                    print("buttonActionTapped \(index)")
-                    self.navigator.goToChat(id: "ynH1LhJkp9DXVz5OHfjS")
+                    print("buttonActionTapped \(index) \(self.messages.value[index])")
+                    self.navigator.goToChat(id: self.messages.value[index]["id"] as! String)
                 })
                 .mapToVoid()
                 .asDriver()

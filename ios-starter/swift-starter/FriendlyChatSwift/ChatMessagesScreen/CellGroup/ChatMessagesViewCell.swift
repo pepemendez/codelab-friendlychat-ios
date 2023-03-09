@@ -26,7 +26,7 @@ class ChatMessagesViewCell: UITableViewCell {
         return title
     }()
 
-    private let lblMessage: UILabel = {
+    public let lblMessage: UILabel = {
         let message = UILabel()
         message.text = "mundo"
         message.isEnabled = false

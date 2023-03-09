@@ -46,6 +46,7 @@ class ChatRoomsRepository {
                             var dictionary: [String: Any] =
                             ["name": document.document.documentID]
                             dictionary["isPublic"] = true
+                            dictionary["id"] = document.document.data()["id"]
                             
                             var newMessages = strongSelf.chatRooms.value
                             newMessages.append(dictionary)
