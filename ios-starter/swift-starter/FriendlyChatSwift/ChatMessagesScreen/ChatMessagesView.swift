@@ -122,26 +122,6 @@ class ChatMessagesView: UIView {
         ]
         self.addConstraints(constraints)
         bindModel()
-        
-        self.photoButton.rx
-            .tap
-            .bind(to: self.photoSubject)
-            .disposed(by: self.disposeBag)
-        
-        self.sendButton.rx
-            .tap
-            .do(onNext: {
-                self.textField.text = ""
-                self.endEditing(true)
-            })
-            .bind(to: self.sendSubject)
-            .disposed(by: self.disposeBag)
-        
-        self.textField.rx
-            .text
-            .orEmpty
-            .bind(to: self.messageSubject)
-            .disposed(by: self.disposeBag)
     }
     
     private func bindModel() {
@@ -177,7 +157,25 @@ class ChatMessagesView: UIView {
                 self?.tableView.deselectRow(at: indexPath, animated: true)
             })
         
+        self.photoButton.rx
+            .tap
+            .bind(to: self.photoSubject)
+            .disposed(by: self.disposeBag)
         
+        self.sendButton.rx
+            .tap
+            .do(onNext: {
+                self.textField.text = ""
+                self.endEditing(true)
+            })
+            .bind(to: self.sendSubject)
+            .disposed(by: self.disposeBag)
+        
+        self.textField.rx
+            .text
+            .orEmpty
+            .bind(to: self.messageSubject)
+            .disposed(by: self.disposeBag)
     }
     
     required init?(coder _: NSCoder) {

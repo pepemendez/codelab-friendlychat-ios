@@ -68,7 +68,7 @@ class ChatMessagesViewController: UIViewController {
         let messageTrigger = self.mainView.messageSubject
             .asDriverOnErrorJustComplete()
         
-        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewWillAppear(_:)))
+        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewDidAppear(_:)))
                             .take(1)
                             .mapToVoid()
                             .asDriverOnErrorJustComplete()

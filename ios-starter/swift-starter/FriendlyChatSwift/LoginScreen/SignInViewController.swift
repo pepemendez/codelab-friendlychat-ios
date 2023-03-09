@@ -40,7 +40,7 @@ class SignInViewController: UIViewController {
         viewModel = SignInViewModel(navigator: navigator)
         view = mainView
         
-        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewWillAppear(_:)))
+        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewDidAppear(_:)))
                             .take(1)
                             .mapToVoid()
                             .asDriverOnErrorJustComplete()
