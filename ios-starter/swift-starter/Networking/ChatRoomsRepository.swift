@@ -53,8 +53,6 @@ class ChatRoomsRepository {
                             else{
                                 dictionary["active_users"] = "Público"
                             }
-                            print(document.document.data())
-                            print(snapshot.data())
                             
                             var newMessages = strongSelf.chatRooms.value
                             newMessages.append(dictionary)

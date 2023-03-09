@@ -44,7 +44,6 @@ class SignInViewModel: ViewModelType{
                 self.repository
                     .getUser()
                     .do(onNext: { user in
-                        print(user)
                         if user != nil {
                             self.navigator.Logged()
                         }

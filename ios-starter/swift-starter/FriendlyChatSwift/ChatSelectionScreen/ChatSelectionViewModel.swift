@@ -23,6 +23,7 @@ class ChatSelectionViewModel: ViewModelType{
     private let repository: ChatRoomsRepository
     
     public var chat: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
+    public var user: PublishSubject<[String: String]> = PublishSubject<[String: String]>()
 
     init(navigator: ChatNavigatorProtocol) {
         self.navigator = navigator
@@ -30,12 +31,21 @@ class ChatSelectionViewModel: ViewModelType{
     }
     
     func transform(input: ChatSelectionTypeInput) -> ChatSelectionTypeOutput {
+        var data = [String:String]()
+        let user = Auth.auth().currentUser
+        if let photoURL = user?.photoURL {
+            data[Constants.MessageFields.name] = user?.displayName
+            data[Constants.MessageFields.photoURL] = photoURL.absoluteString
+        }
+                
         let triggered = input.trigger
-                .map{
+                .do(onNext: {
                     self.repository.chatRooms
                         .bind(to: self.chat)
                         .disposed(by: self.disposeBag)
-                }
+                    
+                    self.user.onNext(data)
+                })
                 .mapToVoid()
         
         let buttonActionTapped =
@@ -48,6 +58,7 @@ class ChatSelectionViewModel: ViewModelType{
                 .asDriver()
                     
                 return Output(triggered: triggered,
+                              user: self.user.asDriverOnErrorJustComplete(),
                               selectionTriggered: buttonActionTapped,
                               error: self.errorTracker.asDriverOnErrorJustComplete())
     }

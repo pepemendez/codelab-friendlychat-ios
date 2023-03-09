@@ -36,7 +36,7 @@ class ChatSelectionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated:true)
         self.title = "Mis chats"
@@ -68,6 +68,14 @@ class ChatSelectionViewController: UIViewController {
                                    selectionTrigger: selectionTrigger)
         
         let output = self.viewModel.transform(input: input)
+        
+        output
+            .user
+            .drive(onNext: { user in
+                print("drive \(user)")
+                self.mainView.setUser(data: user)
+            })
+            .disposed(by: self.disposeBag)
         
         output
             .triggered

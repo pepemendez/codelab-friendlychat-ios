@@ -17,6 +17,7 @@ struct ChatSelectionTypeInput {
 
 struct ChatSelectionTypeOutput {
     let triggered: Driver<Void>
+    let user: Driver<[String: String]>
     let selectionTriggered: Driver<Void>
     let error: Driver<String>?
 }
