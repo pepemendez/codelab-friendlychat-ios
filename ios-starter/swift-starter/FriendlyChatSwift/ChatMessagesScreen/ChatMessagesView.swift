@@ -18,6 +18,39 @@ class ChatMessagesView: UIView {
         return table
     }()
     
+    public let stackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0,right: 8)
+        stackView.spacing = 8
+        return stackView
+    }()
+    
+    public let textField: UITextField = {
+        let textField = UITextField()
+        textField.clipsToBounds = true
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 6
+        textField.layer.masksToBounds = false
+        return textField
+    }()
+    
+    public let sendButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Enviar", for: .normal)
+        return button
+    }()
+    
+    public let photoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "ic_add_a_photo"), for: .normal)
+        return button
+    }()
+    
     init() {
         self.selectedTrigger = self.tableView.rx
             .itemSelected
@@ -28,22 +61,38 @@ class ChatMessagesView: UIView {
     }
     
     private func setView() {
-        backgroundColor = .lightGray
+        backgroundColor = .white
         
         addSubview(self.tableView)
+        addSubview(self.stackView)
+        
+        self.stackView.addArrangedSubview(self.photoButton)
+        self.stackView.addArrangedSubview(self.textField)
+        self.stackView.addArrangedSubview(self.sendButton)
         
         self.tableView.register(ChatMessagesViewCell.self, forCellReuseIdentifier: "Cell")
         
-        
         self.tableView.separatorStyle = .none
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.photoButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        self.sendButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        self.textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         let constraints = [
             //tableView
             self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.stackView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            //
+            //self.textField.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -80),
+            self.photoButton.widthAnchor.constraint(equalToConstant: 30),
+            self.sendButton.widthAnchor.constraint(equalToConstant: 60)
         ]
         self.addConstraints(constraints)
         bindModel()
