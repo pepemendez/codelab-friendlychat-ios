@@ -1,12 +1,3 @@
-# Firebase Codelab: FriendlyChat
-
-This is the source code for the Firebase FriendlyChat codelab. It includes start and end versions of the
-code for Objective-C and Swift. To get started open the codelab instructions:
-
-
- - [Firebase Objective-C Codelab](https://codelabs.developers.google.com/codelabs/firebase-ios-objc/).
-
-
 # FriendlyChat - Firestore
 Test con conexion a Firestore 
 
@@ -21,7 +12,7 @@ Requisitos:
 <li> Debe haber un sistema de autenticación y autorización para garantizar que los usuarios solo puedan acceder a las conversaciones a las que tienen acceso. <span style="color: green">&#10003;</span></li>
 <li>La aplicación debe seguir los principios de Clean Architecture, con separación de
 responsabilidades en capas, tales como Domain, Data, y Presentation. (A medias)</li>
-
+<br/>
 Puntos por considerar:
 <ul>
 <li>El código debe ser claro y bien organizado, y seguir los principios de Clean Architecture. (A medias) </li>
@@ -34,16 +25,16 @@ completamente funcional que cumpla con los requisitos mencionados anteriormente.
 deberá proporcionar el código fuente de la aplicación y cualquier documentación necesaria
 para ejecutarla y compilarla. También se recomienda proporcionar cualquier comentario
 adicional sobre las decisiones de diseño y la estructura del código.<span style="color: green">&#10003;</span></li>
-
+</ul>
+<br/>
 
 Adicionales incluidos en el proyecto:
-
-● Se debe de soportar iOS 13 o superior.
-● Se debe de ocupar XCode 13 o superior.
-● Se debe de ocupar Swift 5.
-● El código fuente se debe de subir en un servidor público de GIT
-(GitHub/BitBucket/etc...).
-● Se consideran 3 días(fin de semana) para esta prueba.
+<br/>
+● Se debe de soportar iOS 13 o superior.<br/>
+● Se debe de ocupar XCode 13 o superior.<br/>
+● Se debe de ocupar Swift 5.<br/>
+● El código fuente se debe de subir en un servidor público de GIT (GitHub/BitBucket/etc...).<br/>
+● Se consideran 3 días(fin de semana) para esta prueba.<br/>
 
 
 Consideraciones
