@@ -32,20 +32,26 @@ Adicionales incluidos en el proyecto:
 <br/>
 
 <ul>
-<li>Se debe de soportar iOS 13 o superior.</li>
-<li>Se debe de ocupar XCode 13 o superior.</li>
+<li>Se debe de soportar iOS 13 o superior.<span style="color: green">&#10003;</span></li>
+<li>Se debe de ocupar XCode 13 o superior.<span style="color: green">&#10003;</span></li>
 <li>Se debe de ocupar Swift 5.</li>
-<li>El código fuente se debe de subir en un servidor público de GIT (GitHub/BitBucket/etc...)</li>
+<li>El código fuente se debe de subir en un servidor público de GIT (GitHub/BitBucket/etc...).<span style="color: green">&#10003;</span></li>
 <li>Se consideran 3 días(fin de semana) para esta prueba.</li>
-
 </ul>
 
-
+<br/>
 Consideraciones
 <ul>
 <li>El proyecto se creó a partir de: <br/>
  - [Firebase Swift Codelab](https://codelabs.developers.google.com/codelabs/firebase-ios-swift/).
  <br/> Por tanto, la versión que se utilizó de Swift se heredó del inicio del proyecto
+</li>
+<li>Para correr el proyecto es necesario ir a la ruta /ios-starter/swift-starter</li>
+<li>Se consideran chats publicos y privados, por tanto los usuarios que ingresen a la aplicación no podran ver los chats privados (o no deberían)
+<p align="center">
+  <img src="imagenes/IMG_0001.png"  width="250"/>
+</p>
+
 </li>
 </ul>
 
@@ -54,12 +60,10 @@ Consideraciones
 
 Opcionales que me gustaría implementar
 <ul>
-<li>Mejorar la interfaz de usuario, ej.
+<li>Mejorar la interfaz de usuario</li>
 <ul>
 <li>Mejorar la paleta de colores</li>
-<li>Añadir más animaciones</li>
-<li>Interfaz específica para iPad</li>
-<li>Mostrar más información, ej. genero, compañias asociadas, páginas de streamings, etc.</li>
+<li>Añadir animaciones</li>
 </ul>
 </li>
 </ul>
