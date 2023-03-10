@@ -57,6 +57,7 @@ Consideraciones
   <img src="imagenes/IMG_0002.PNG"  width="750"/>
 </p>
 </li>
+<li>Se utiliza RxSwift para la mayor parte del proyecto</li>
 </ul>
 
 <br/>
@@ -65,9 +66,15 @@ Consideraciones
 Opcionales que me gustaría implementar
 <ul>
 <li>Mejorar la interfaz de usuario</li>
-<ul>
 <li>Mejorar la paleta de colores</li>
 <li>Añadir animaciones</li>
+<li>Mejorar la estructura del código con los siguientes puntos:
+<ul>
+<li>Añadir una clase wrapper para el manejo de imágenes de Firebase</li>
+<li>Añadir una clase wrapper para el manejo de Autenticación</li>
+<li>Añadir una clase wrapper para el manejo de Google SignIn</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
