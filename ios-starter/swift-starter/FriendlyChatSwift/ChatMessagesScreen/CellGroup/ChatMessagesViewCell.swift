@@ -20,8 +20,7 @@ class ChatMessagesViewCell: UITableViewCell {
     public let lblTitle: UILabel = {
         let title = UILabel()
         title.text = "hola"
-        title.isEnabled = false
-        title.numberOfLines = 0
+        title.numberOfLines = 1
         title.textAlignment = .left
         return title
     }()
@@ -29,7 +28,6 @@ class ChatMessagesViewCell: UITableViewCell {
     public let lblMessage: UILabel = {
         let message = UILabel()
         message.text = "mundo"
-        message.isEnabled = false
         message.textAlignment = .left
         message.numberOfLines = 0
         return message
@@ -60,20 +58,30 @@ class ChatMessagesViewCell: UITableViewCell {
           lblMessage.text = "sent by: \(name)"
         } else {
           let text = message[Constants.MessageFields.text] ?? ""
-            lblMessage.text = name + ": " + text
+            lblTitle.text = "\(name):"
+            lblMessage.text = text
             icon.image = UIImage(named: "ic_account_circle")
-          if let photoURL = message[Constants.MessageFields.photoURL], let URL = URL(string: photoURL),
-              let data = try? Data(contentsOf: URL) {
-              icon.image = UIImage(data: data)
-              icon.layer.masksToBounds = false
-              icon.layer.cornerRadius = 20
-              icon.clipsToBounds = true
+            if let photoURL = message[Constants.MessageFields.photoURL], let URL = URL(string: photoURL){
+                URLSession.shared.dataTask(with: URL) { [weak self](data, response, error) in
+                   guard let imageData = data else { return }
+                   DispatchQueue.main.async {
+                       self?.icon.image = UIImage(data: imageData)
+                       self?.icon.layer.masksToBounds = false
+                       self?.icon.layer.cornerRadius = 20
+                       self?.icon.clipsToBounds = true
+                   }
+                 }.resume()
+            }
           }
-        }
     }
 
     private func setView() {
+        self.backgroundColor = .clear
         let container = UIView()
+        container.clipsToBounds = true
+        container.backgroundColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1)
+        container.layer.masksToBounds = false
+        container.layer.cornerRadius = 20
         container.clipsToBounds = true
         addSubview(container)
         
@@ -88,34 +96,33 @@ class ChatMessagesViewCell: UITableViewCell {
         self.divider.translatesAutoresizingMaskIntoConstraints = false
         self.lblTitle.translatesAutoresizingMaskIntoConstraints = false
         self.lblMessage.translatesAutoresizingMaskIntoConstraints = false
-
+        self.lblMessage.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        self.lblTitle.setContentHuggingPriority(.defaultLow, for: .vertical)
+        
         let constraints = [
             //
-            container.heightAnchor.constraint(equalToConstant: 80),
+            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
             container.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor),
 
             container.leadingAnchor.constraint(equalTo:   self.leadingAnchor    , constant: 20),
             container.trailingAnchor.constraint(equalTo:  self.trailingAnchor   , constant: -20),
-            container.topAnchor.constraint(equalTo:       self.topAnchor        , constant: 20),
-            container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -20),
-            //
-            self.divider.heightAnchor.constraint(equalToConstant: 1),
-            self.divider.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 13),
-            self.divider.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -13),
-            self.divider.topAnchor.constraint(equalTo: container.topAnchor, constant: 1),
+            container.topAnchor.constraint(equalTo:       self.topAnchor        , constant: 10),
+            container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -10),
             //
             self.icon.heightAnchor.constraint(equalToConstant: 40),
             self.icon.widthAnchor.constraint(equalToConstant: 40),
             self.icon.topAnchor.constraint(equalTo: container.topAnchor, constant: 18),
             self.icon.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
             //
-            self.lblTitle.topAnchor.constraint(equalTo: container.topAnchor, constant: 0.5),
+            self.lblTitle.heightAnchor.constraint(equalToConstant: 25),
+            self.lblTitle.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
             self.lblTitle.leadingAnchor.constraint(equalTo: self.icon.trailingAnchor, constant: 10),
-            self.lblTitle.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            self.lblTitle.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
             //
             self.lblMessage.topAnchor.constraint(equalTo: lblTitle.bottomAnchor, constant: 1),
             self.lblMessage.leadingAnchor.constraint(equalTo: lblTitle.leadingAnchor),
             self.lblMessage.trailingAnchor.constraint(equalTo: lblTitle.trailingAnchor, constant: 1),
+            self.lblMessage.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10)
         ]
         self.addConstraints(constraints)
     }

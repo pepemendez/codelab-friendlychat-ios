@@ -17,8 +17,8 @@ class ChatNavigatorDefault: ChatNavigatorProtocol{
         self.navigationController = navigationController
     }
     
-    func goToChat(id: String) {
-        let viewController = ChatMessagesViewController(with: ChatMessagesViewModel(navigator: self, chatId: id))
+    func goToChat(id: String, chatTitle: String) {
+        let viewController = ChatMessagesViewController(with: ChatMessagesViewModel(navigator: self, chatId: id), chatTitle: chatTitle)
         self.navigationController.navigationBar.isHidden = false
         self.navigationController.pushViewController(viewController, animated: false)
     }

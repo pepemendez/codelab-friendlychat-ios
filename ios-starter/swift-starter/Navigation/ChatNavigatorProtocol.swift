@@ -9,6 +9,6 @@
 import Foundation
 
 protocol ChatNavigatorProtocol {
-    func goToChat(id: String)
+    func goToChat(id: String, chatTitle: String)
     func Error()
 }

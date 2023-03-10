@@ -17,8 +17,10 @@ class ChatMessagesViewController: UIViewController {
     private var mainView: ChatMessagesView
     private let viewModel: ChatMessagesViewModel
     private let disposeBag = DisposeBag()
+    private let chatTitle: String
     
-    init(with viewModel: ChatMessagesViewModel){
+    init(with viewModel: ChatMessagesViewModel, chatTitle: String){
+        self.chatTitle = chatTitle
         self.viewModel = viewModel
         mainView = ChatMessagesView()
         
@@ -31,6 +33,7 @@ class ChatMessagesViewController: UIViewController {
     }
 
     override func loadView() {
+        self.title = self.chatTitle
         view = self.mainView
     }
 
@@ -44,7 +47,6 @@ class ChatMessagesViewController: UIViewController {
         self.mainView.dataModel
             .asDriver()
             .drive(onNext:{ _ in
-                print("self.mainView.dataModel")
             })
             .disposed(by: self.disposeBag)
         

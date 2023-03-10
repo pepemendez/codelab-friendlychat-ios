@@ -39,6 +39,10 @@ class ChatMessagesView: UIView {
 
     public let tableView: UITableView = {
         let table = UITableView(frame: CGRect.zero)
+        table.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.02)
+        table.clipsToBounds = true
+        table.layer.cornerRadius = 20
+        table.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
         return table
     }()
     
@@ -48,7 +52,7 @@ class ChatMessagesView: UIView {
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0,right: 8)
+        stackView.layoutMargins = UIEdgeInsets(top: 20, left: 8, bottom: 10,right: 8)
         stackView.spacing = 8
         return stackView
     }()
@@ -58,7 +62,7 @@ class ChatMessagesView: UIView {
         textField.clipsToBounds = true
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.borderWidth = 1.0
-        textField.layer.cornerRadius = 6
+        textField.layer.cornerRadius = 18
         textField.layer.masksToBounds = false
         textField.isScrollEnabled = false
         textField.font = UIFont.systemFont(ofSize: 15.0)
@@ -68,12 +72,14 @@ class ChatMessagesView: UIView {
     private let sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Enviar", for: .normal)
+        button.tintColor = .black
         return button
     }()
     
     private let photoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "ic_add_a_photo"), for: .normal)
+        button.tintColor = .black
         return button
     }()
     
@@ -101,6 +107,7 @@ class ChatMessagesView: UIView {
         self.tableView.separatorStyle = .none
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.allowsSelection = false
         
         self.photoButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         self.sendButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
@@ -110,11 +117,11 @@ class ChatMessagesView: UIView {
             //tableView
             self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            self.tableView.topAnchor.constraint(equalTo: self.topAnchor),
             self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.stackView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
-            self.stackView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             //
             //self.textField.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -80),
             self.photoButton.widthAnchor.constraint(equalToConstant: 30),
@@ -170,6 +177,7 @@ class ChatMessagesView: UIView {
             })
             .bind(to: self.sendSubject)
             .disposed(by: self.disposeBag)
+                
         
         self.textField.rx
             .text
