@@ -57,7 +57,8 @@ Consideraciones
   <img src="imagenes/IMG_0002.PNG"  width="750"/>
 </p>
 </li>
-<li>Se utiliza RxSwift para la mayor parte del proyecto</li>
+<li>Debido a las limitaciones de las cuotas del proyecto de firebase, el envio de imágenes por chat no se terminó.</li>
+<li>Se utiliza RxSwift para la mayor parte del proyecto.</li>
 </ul>
 
 <br/>
@@ -73,6 +74,11 @@ Opcionales que me gustaría implementar
 <li>Añadir una clase wrapper para el manejo de imágenes de Firebase</li>
 <li>Añadir una clase wrapper para el manejo de Autenticación</li>
 <li>Añadir una clase wrapper para el manejo de Google SignIn</li>
+<li>Añadir una clase para el manejo de strings dentro de la aplicación</li>
+<li>Incluir localización para los strings dentro de la aplicación</li>
+<li>Terminar el modelado de datos</li>
+<li>Crear pruebas unitarias</li>
+<li>Migrar a Swift 5 y Swift UI</li>
 </ul>
 </li>
 </ul>
