@@ -94,6 +94,8 @@ class ChatMessagesView: UIView {
         
         self.tableView.register(ChatMessagesViewCell.self, forCellReuseIdentifier: "Cell")
         
+        self.tableView.automaticallyAdjustsScrollIndicatorInsets = false
+        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         self.tableView.separatorStyle = .none
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
