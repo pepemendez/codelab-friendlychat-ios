@@ -33,7 +33,22 @@ class ChatMessagesRepository {
             
             let _ = snapshot.documentChanges.map { (document) in
                 if(document.type == .added){
-                    strongSelf.messages.onNext(document.document.data())
+                    
+                    var documentData = document.document.data()
+                    
+                    let preferences = UserDefaults.standard
+
+                    let currentLevelKey = "user_id"
+                    if preferences.object(forKey: currentLevelKey) == nil {
+                        //  Doesn't exist
+                    } else {
+                        let currentLevel = preferences.string(forKey: currentLevelKey)
+                        if(currentLevel == (documentData[Constants.MessageFields.id] as? String)){
+                            documentData["isMine"] = "true"
+                        }
+                    }
+                    
+                    strongSelf.messages.onNext(documentData)
                 }
             }
           })

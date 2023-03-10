@@ -25,8 +25,7 @@ class UsersRepository {
         if let user = Auth.auth().currentUser{
             ref = db.collection("users")
                 
-            ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid)
-            ref.addSnapshotListener({ [weak self] (snapshot, error) in
+            ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid).addSnapshotListener({ [weak self] (snapshot, error) in
                 guard let strongSelf = self else { return }
 
                 guard let snapshot = snapshot else {
