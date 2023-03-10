@@ -45,6 +45,9 @@ Consideraciones
 </li>
 </ul>
 
+<br/>
+<br/>
+
 Opcionales que me gustaría implementar
 <ul>
 <li>Mejorar la interfaz de usuario, ej.
