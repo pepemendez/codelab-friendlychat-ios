@@ -60,7 +60,6 @@ Consideraciones
 <li>Debido a las limitaciones de las cuotas del proyecto de firebase, el envio de imágenes por chat no se terminó.</li>
 <li>Se utiliza RxSwift para la mayor parte del proyecto.</li>
 </ul>
-
 <br/>
 <br/>
 
@@ -75,10 +74,15 @@ Opcionales que me gustaría implementar
 <li>Añadir una clase wrapper para el manejo de Autenticación</li>
 <li>Añadir una clase wrapper para el manejo de Google SignIn</li>
 <li>Añadir una clase para el manejo de strings dentro de la aplicación</li>
+<li>Añadir una clase wrapper para el manejo de imágenes de Firebase</li>
+<li>Integrar IQKeyboardManager para el manejo del teclado, que es importante en un chat </li>
+<li>Corregir la integración de imagenes en el chat, se utilizó mayoritariamente el código inical del proyecto cambiando breves cosas, pero queda pendiente.</li>
+<li>Mejorar la experiencia de usuario</li>
 <li>Incluir localización para los strings dentro de la aplicación</li>
 <li>Terminar el modelado de datos</li>
 <li>Crear pruebas unitarias</li>
 <li>Migrar a Swift 5 y Swift UI</li>
+<li>Utilizar un servicio más robusto o consultar más a detalle la funcionalidad Firebase Firestore</li>
 </ul>
 </li>
 </ul>

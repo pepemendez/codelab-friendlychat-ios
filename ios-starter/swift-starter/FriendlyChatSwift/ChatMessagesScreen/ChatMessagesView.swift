@@ -70,6 +70,7 @@ class ChatMessagesView: UIView {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "ic_add_a_photo"), for: .normal)
         button.tintColor = .black
+        button.isHidden = true
         return button
     }()
     
@@ -176,6 +177,18 @@ class ChatMessagesView: UIView {
             .orEmpty
             .bind(to: self.messageSubject)
             .disposed(by: self.disposeBag)
+                
+                
+        let loginValidation = textField
+            .rx
+            .text
+            .map({!(($0?.isEmpty ?? true) || ($0 != nil && $0!.count < 0))})
+
+
+
+        let _ = loginValidation
+                                .bind(to: sendButton.rx.isEnabled)
+                                .disposed(by: self.disposeBag)
     }
     
     required init?(coder _: NSCoder) {
