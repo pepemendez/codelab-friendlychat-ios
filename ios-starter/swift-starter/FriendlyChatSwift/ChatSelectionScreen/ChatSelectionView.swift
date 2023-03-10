@@ -88,8 +88,8 @@ class ChatSelectionView: UIView {
         bindModel()
     }
     
-    public func setUser(data userData: [String: String]){
-        if let photoURL = userData[Constants.MessageFields.photoURL], photoURL.hasPrefix("gs://"){
+    public func setUser(data userData:AppUser){
+        if let photoURL = userData.photoURL, photoURL.hasPrefix("gs://"){
             Storage.storage().reference(forURL: photoURL).getData(maxSize: INT64_MAX) {(data, error) in
                 if let error = error {
                     print("Error downloading: \(error)")
@@ -110,7 +110,7 @@ class ChatSelectionView: UIView {
              }.resume()
         }
         
-        self.label.text = userData[Constants.MessageFields.name]
+        self.label.text = userData.name
         self.label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         self.labeltext.text = "Mis chats"
         self.labeltext.textColor = .white

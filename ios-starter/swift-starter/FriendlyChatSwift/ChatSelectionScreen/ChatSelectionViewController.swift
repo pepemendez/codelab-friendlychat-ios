@@ -81,7 +81,9 @@ class ChatSelectionViewController: UIViewController {
             .user
             .drive(onNext: { user in
                 print("drive \(user)")
-                self.mainView.setUser(data: user)
+                if let user = user{
+                    self.mainView.setUser(data: user)
+                }
             })
             .disposed(by: self.disposeBag)
         

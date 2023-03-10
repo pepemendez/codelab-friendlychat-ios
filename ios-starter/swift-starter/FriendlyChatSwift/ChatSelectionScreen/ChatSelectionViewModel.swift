@@ -23,7 +23,7 @@ class ChatSelectionViewModel: ViewModelType{
     private let repository: ChatRoomsRepository
     private let userRepository: UsersRepository
     public var chat: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
-    public var user: PublishSubject<[String: String]> = PublishSubject<[String: String]>()
+    public var user: PublishSubject<AppUser?> = PublishSubject<AppUser?>()
 
     init(navigator: ChatNavigatorProtocol) {
         self.navigator = navigator
@@ -32,16 +32,17 @@ class ChatSelectionViewModel: ViewModelType{
     }
     
     func transform(input: ChatSelectionTypeInput) -> ChatSelectionTypeOutput {
-        var data = [String:String]()
+        
+        var data: AppUser? = nil
         
         self.userRepository
             .getUser()
             .do(onNext: { user in
                 if let info = user {
-                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
-                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
-                    
-                    self.user.onNext(data)
+//                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
+//                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
+                    data = info
+                    self.user.onNext(info)
                 }
             })
             .throttle(.seconds(5), scheduler: MainScheduler.instance)

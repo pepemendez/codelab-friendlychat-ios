@@ -45,6 +45,7 @@
 		36BF852029BAE072001E0410 /* UserScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF851F29BAE072001E0410 /* UserScreenView.swift */; };
 		36BF852229BAE084001E0410 /* UserScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF852129BAE084001E0410 /* UserScreenViewModel.swift */; };
 		36BF852429BAE094001E0410 /* UserScreenViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF852329BAE094001E0410 /* UserScreenViewModelType.swift */; };
+		36E70CDC29BB7B1600DF25B2 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E70CDB29BB7B1600DF25B2 /* AppUser.swift */; };
 		5F5A537E1ADE67D500F81DF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */; };
 		5F5A53801ADE67D500F81DF0 /* FCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */; };
 /* End PBXBuildFile section */
@@ -90,6 +91,7 @@
 		36BF851F29BAE072001E0410 /* UserScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserScreenView.swift; sourceTree = "<group>"; };
 		36BF852129BAE084001E0410 /* UserScreenViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserScreenViewModel.swift; sourceTree = "<group>"; };
 		36BF852329BAE094001E0410 /* UserScreenViewModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserScreenViewModelType.swift; sourceTree = "<group>"; };
+		36E70CDB29BB7B1600DF25B2 /* AppUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
 		5F5A53791ADE67D500F81DF0 /* FriendlyChatSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendlyChatSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5A537D1ADE67D500F81DF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F5A537F1ADE67D500F81DF0 /* FCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCViewController.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				36BF851A29BAC33D001E0410 /* ChatMessage.swift */,
+				36E70CDB29BB7B1600DF25B2 /* AppUser.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 				36BF84EF29B975D4001E0410 /* RxSwift+ext.swift in Sources */,
 				36BF84ED29B975B0001E0410 /* ViewModelType.swift in Sources */,
 				36BF850F29BA3475001E0410 /* ChatNavigatorProtocol.swift in Sources */,
+				36E70CDC29BB7B1600DF25B2 /* AppUser.swift in Sources */,
 				36BF851829BAB887001E0410 /* Date.swift in Sources */,
 				36BF852029BAE072001E0410 /* UserScreenView.swift in Sources */,
 				36BF851E29BAE05F001E0410 /* UserScreenViewController.swift in Sources */,

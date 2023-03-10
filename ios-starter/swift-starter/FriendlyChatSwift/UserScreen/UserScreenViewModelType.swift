@@ -23,7 +23,7 @@ struct UserScreenTypeOutput {
     let imageTrigerred: Driver<Void>
     let imageFetchedTrigerred: Driver<UIImage?>
     let nameTriggered: Driver<Void>
-    let user: Driver<[String: String]>
+    let user: Driver<AppUser?>
     let closeTriggered: Driver<Void>
     let error: Driver<String>?
 }

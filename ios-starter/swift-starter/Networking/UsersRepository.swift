@@ -15,14 +15,14 @@ import RxCocoa
 class UsersRepository {
     let db = Firestore.firestore()
     private var ref: CollectionReference!
-    private var user: PublishSubject<[String : Any]?> = PublishSubject<[String : Any]?>()
+    private var user: PublishSubject<AppUser?> = PublishSubject<AppUser?>()
 
     init(){
         db.clearPersistence()
     }
     
     
-    func getUser() -> Observable<[String: Any]?>{
+    func getUser() -> Observable<AppUser?>{
         if let user = Auth.auth().currentUser{
             ref = db.collection("users")
             
@@ -46,7 +46,12 @@ class UsersRepository {
                     let currentLevel = document.document.data()["user_id"]
                     let currentLevelKey = "user_id"
                     preferences.set(currentLevel, forKey: currentLevelKey)
-                    strongSelf.user.onNext(document.document.data())
+                    
+                    let user = AppUser(id: document.document.data()["user_id"] as! String,
+                                       name: document.document.data()["name"] as? String,
+                                       photoURL: document.document.data()[Constants.MessageFields.photoURL] as? String,
+                                       user_id: document.document.data()["user_id"] as! String)
+                    strongSelf.user.onNext(user)
                 }
             })
         }

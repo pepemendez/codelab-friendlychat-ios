@@ -98,7 +98,9 @@ class UserScreenViewController: UIViewController {
         output
             .user
             .drive(onNext: { user in
-                self.mainView.setUser(data: user)
+                if let user = user {
+                    self.mainView.setUser(data: user)
+                }
             })
             .disposed(by: self.disposeBag)
         

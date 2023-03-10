@@ -26,7 +26,7 @@ class UserScreenViewModel: ViewModelType{
     var storageRef: StorageReference!
 
     public var chat: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
-    public var user: PublishSubject<[String: String]> = PublishSubject<[String: String]>()
+    public var user: PublishSubject<AppUser?> = PublishSubject<AppUser?>()
 
     init(navigator: ChatNavigatorProtocol) {
         self.navigator = navigator
@@ -36,15 +36,15 @@ class UserScreenViewModel: ViewModelType{
     }
     
     func transform(input: UserScreenTypeInput) -> UserScreenTypeOutput {
-        var data = [String:String]()
-        
+        var data: AppUser? = nil
+
         self.userRepository
             .getUser()
             .do(onNext: { user in
                 if let info = user {
-                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
-                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
-                    
+//                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
+//                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
+                    data = info
                     self.user.onNext(data)
                 }
             })
