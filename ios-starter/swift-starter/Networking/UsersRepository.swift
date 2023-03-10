@@ -21,7 +21,6 @@ class UsersRepository {
     }
     
     func getUser() -> Observable<[String: Any]?>{        
-        db.clearPersistence()
         if let user = Auth.auth().currentUser{
             ref = db.collection("users")
                 
@@ -65,5 +64,23 @@ class UsersRepository {
         }
 
         self.ref.addDocument(data: mdata)
+    }
+    
+    func modifyUser(withPhoto photoURL: String){
+        if let user = Auth.auth().currentUser{
+            ref = db.collection("users")
+                
+            ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid).addSnapshotListener({ [weak self] (snapshot, error) in
+                guard let strongSelf = self else { return }
+
+                guard let snapshot = snapshot else {
+                  print("Error fetching snapshot results: \(error!)")
+                  return
+                }
+                
+                let document = snapshot.documents.first
+                document?.reference.updateData([Constants.MessageFields.photoURL: photoURL])
+          })
+        }
     }
 }

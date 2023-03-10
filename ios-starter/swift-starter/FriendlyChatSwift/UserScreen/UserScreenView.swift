@@ -10,19 +10,11 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-class ChatSelectionView: UIView {
-    public var disposeBag = DisposeBag()
+class UserScreenView: UIView {
+    private let disposeBag = DisposeBag()
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
-    public var userTapped: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
-    public var selectedTrigger: Driver<ControlEvent<IndexPath>.Element>
-    public let tableView: UITableView = {
-        let table = UITableView()
-        table.clipsToBounds = true
-        table.layer.cornerRadius = 20
-        table.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
-        return table
-    }()
-    
+    public var imageTapped: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
+
     public let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -34,18 +26,21 @@ class ChatSelectionView: UIView {
         return stackView
     }()
     
+    public let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .red
+        return imageView
+    }()
+    
     init() {
-        self.selectedTrigger = self.tableView.rx
-            .itemSelected
-            .asDriver()
-        
-        self.stackView
+        self.imageView
             .rx
             .tapGesture()
             .when(.recognized)
             .mapToVoid()
-            .bind(to: userTapped)
+            .bind(to: imageTapped)
             .disposed(by: self.disposeBag)
+            
                 
         super.init(frame: .zero)
         self.setView()
@@ -55,28 +50,23 @@ class ChatSelectionView: UIView {
         backgroundColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1.0)
         
         addSubview(self.stackView)
-        addSubview(self.tableView)
-
-        self.tableView.register(ChatSelectionViewCell.self, forCellReuseIdentifier: "Cell")
+        addSubview(self.imageView)
         
-        self.tableView.separatorStyle = .none
-        self.tableView.bounces = false
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.setContentHuggingPriority(.defaultLow, for: .vertical)
-        self.tableView.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        self.tableView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         let constraints = [
             //
             self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.stackView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
             self.stackView.heightAnchor.constraint(equalToConstant: 60),
-            //tableView
-            self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 12),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            //
+            self.imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
+            self.imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
+            self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         ]
         self.addConstraints(constraints)
         bindModel()
@@ -87,6 +77,9 @@ class ChatSelectionView: UIView {
             URLSession.shared.dataTask(with: URL) { (data, response, error) in
                guard let imageData = data else { return }
                DispatchQueue.main.async {
+                   
+                   self.imageView.image = UIImage(data: imageData)
+                   
                    let icon = UIImageView()
                    icon.image = UIImage(data: imageData)
                    icon.layer.masksToBounds = false
@@ -100,7 +93,7 @@ class ChatSelectionView: UIView {
                    label.text = userData[Constants.MessageFields.name]
                    label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
                    let labeltext = UILabel()
-                   labeltext.text = "Mis chats"
+                   labeltext.text = "Editar información del usuario"
                    labeltext.textColor = .white
                    labeltext.font = UIFont.systemFont(ofSize: 18, weight: .medium)
                    
@@ -132,21 +125,6 @@ class ChatSelectionView: UIView {
     }
     
     private func bindModel() {
-        let _ = self.dataModel
-            .bind(to: tableView.rx
-                .items(cellIdentifier: "Cell", cellType: ChatSelectionViewCell.self))
-            { index, element, cell in
-                cell.lblTitle.text = element["name"] as? String
-                cell.lblMessage.text = element["active_users"] as? String
-            }
-            .disposed(by: self.disposeBag)
-        
-        let _ = self.selectedTrigger
-            .drive(onNext: { [weak self] indexPath in
-                print(indexPath)
-                self?.tableView.deselectRow(at: indexPath, animated: true)
-            })
-            .disposed(by: self.disposeBag)
     }
     
     required init?(coder _: NSCoder) {

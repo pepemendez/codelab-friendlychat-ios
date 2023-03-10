@@ -13,5 +13,6 @@ pod 'GoogleSignIn'
 pod 'FirebaseFirestore'
 pod 'RxSwift'
 pod 'RxCocoa'
+pod 'RxGesture'
 target 'FriendlyChatSwift' do
 end

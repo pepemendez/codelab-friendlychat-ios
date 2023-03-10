@@ -47,7 +47,7 @@ class ChatSelectionViewController: UIViewController {
         self.bindViewModel()
     }
     
-    private func bindViewModel(){
+    private func bindViewModel(){        
         self.viewModel.chat
             .bind(to: mainView.dataModel)
             .disposed(by: self.disposeBag)
@@ -59,15 +59,24 @@ class ChatSelectionViewController: UIViewController {
             }
             .asDriver()
         
+        let userEditTrigger =  self.mainView.userTapped
+            .asDriverOnErrorJustComplete()
+        
         let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewDidAppear(_:)))
                             .take(1)
                             .mapToVoid()
                             .asDriverOnErrorJustComplete()
         
         let input = ChatSelectionTypeInput(trigger: viewWillAppear,
-                                   selectionTrigger: selectionTrigger)
+                                   selectionTrigger: selectionTrigger,
+                                    userEditTrigger: userEditTrigger)
         
         let output = self.viewModel.transform(input: input)
+        
+        output
+            .userEditTriggered
+            .drive()
+            .disposed(by: self.disposeBag)
         
         output
             .user

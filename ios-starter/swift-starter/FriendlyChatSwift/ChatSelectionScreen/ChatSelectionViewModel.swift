@@ -57,9 +57,18 @@ class ChatSelectionViewModel: ViewModelType{
                 .mapToVoid()
                 .asDriver()
                     
-                return Output(triggered: triggered,
-                              user: self.user.asDriverOnErrorJustComplete(),
-                              selectionTriggered: buttonActionTapped,
-                              error: self.errorTracker.asDriverOnErrorJustComplete())
+        let userEditTriggered = input.userEditTrigger
+                .skip(1)
+                .do(onNext: { index in
+                    self.navigator.goToUser()
+                })
+                .mapToVoid()
+                .asDriver()
+                        
+        return Output(triggered: triggered,
+                      user: self.user.asDriverOnErrorJustComplete(),
+                      userEditTriggered: userEditTriggered,
+                      selectionTriggered: buttonActionTapped,
+                      error: self.errorTracker.asDriverOnErrorJustComplete())
     }
 }

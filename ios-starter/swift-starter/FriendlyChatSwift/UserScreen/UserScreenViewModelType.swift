@@ -10,16 +10,16 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-struct ChatSelectionTypeInput {
+struct UserScreenTypeInput {
     let trigger: Driver<Void>
-    let selectionTrigger: Driver<Int>
-    let userEditTrigger: Driver<Void>
+    let imageTrigger: Driver<UIViewController>
+    let imageFetched: Driver<[UIImagePickerController.InfoKey : Any]>
 }
 
-struct ChatSelectionTypeOutput {
+struct UserScreenTypeOutput {
     let triggered: Driver<Void>
+    let imageTrigerred: Driver<Void>
+    let imageFetchedTrigerred: Driver<UIImage?>
     let user: Driver<[String: String]>
-    let userEditTriggered: Driver<Void>
-    let selectionTriggered: Driver<Void>
     let error: Driver<String>?
 }

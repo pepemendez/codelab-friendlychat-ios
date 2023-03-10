@@ -834,6 +834,9 @@ PODS:
   - RxCocoa (6.5.0):
     - RxRelay (= 6.5.0)
     - RxSwift (= 6.5.0)
+  - RxGesture (4.0.4):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
   - RxRelay (6.5.0):
     - RxSwift (= 6.5.0)
   - RxSwift (6.5.0)
@@ -848,6 +851,7 @@ DEPENDENCIES:
   - FirebaseFirestore
   - GoogleSignIn
   - RxCocoa
+  - RxGesture
   - RxSwift
 
 SPEC REPOS:
@@ -885,6 +889,7 @@ SPEC REPOS:
     - PromisesObjC
     - PromisesSwift
     - RxCocoa
+    - RxGesture
     - RxRelay
     - RxSwift
 
@@ -922,9 +927,10 @@ SPEC CHECKSUMS:
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
 
-PODFILE CHECKSUM: 71cd86c767244ab6ae77a103195012e031532ac7
+PODFILE CHECKSUM: fbaf9bd9ae97b2e0a22fe18dfa8758b0e7057a0c
 
 COCOAPODS: 1.11.3

@@ -21,8 +21,7 @@ class ChatRoomsRepository {
     }
 
     func configureDatabase() {
-        Firestore.firestore().clearPersistence()
-        ref = Firestore.firestore().collection("chatlobbies")
+        ref = db.collection("chatlobbies")
         ref.addSnapshotListener({ [weak self] (snapshot, error) in
             guard let snapshot = snapshot else {
               print("Error fetching snapshot results: \(error!)")

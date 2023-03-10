@@ -21,7 +21,6 @@ class ChatMessagesRepository {
     }
     
     func getMessages(byRoomId room: String) -> Observable<[ChatMessage]>{
-        db.clearPersistence()
         ref = db.collection("messages").document(room).collection("messages")
         
         let preferences = UserDefaults.standard
