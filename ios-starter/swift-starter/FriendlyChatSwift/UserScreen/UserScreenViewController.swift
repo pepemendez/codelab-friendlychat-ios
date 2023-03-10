@@ -63,7 +63,7 @@ class UserScreenViewController: UIViewController {
             })
             .asDriverOnErrorJustComplete()
         
-        let imageTriggered = self.mainView.imageTapped
+        let imageTrigger = self.mainView.imageTapped
             .do(onNext:{
                 print("imageTriggered")
             })
@@ -72,12 +72,21 @@ class UserScreenViewController: UIViewController {
             }
             .asDriverOnErrorJustComplete()
         
+        let nameTrigger = self.mainView.sendSubject
+            .asDriverOnErrorJustComplete()
+        
         
         let input = UserScreenTypeInput(trigger: viewWillAppear,
-                                        imageTrigger: imageTriggered,
-                                        imageFetched: mediaResponded)
+                                        imageTrigger: imageTrigger,
+                                        imageFetched: mediaResponded,
+                                        nameTrigger: nameTrigger)
         
         let output = self.viewModel.transform(input: input)
+        
+        output
+            .nameTriggered
+            .drive()
+            .disposed(by: self.disposeBag)
         
         output
             .imageFetchedTrigerred

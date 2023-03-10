@@ -69,26 +69,38 @@ class ChatMessagesRepository {
     }
     
     func setMesssage(toRoomId room: String, withData data: [String: String]){
-        var mdata = data
-        mdata[Constants.MessageFields.name] = Auth.auth().currentUser?.displayName
-        if let photoURL = Auth.auth().currentUser?.photoURL {
-          mdata[Constants.MessageFields.photoURL] = photoURL.absoluteString
-        }
         
-        let preferences = UserDefaults.standard
+        if let user = Auth.auth().currentUser{
+            let referencia = db.collection("users").whereField(Constants.MessageFields.id, isEqualTo: user.uid)
+            referencia.getDocuments(completion:{ (document, err) in
+                if let err = err {
+                    print(err.localizedDescription)
+                }
+                else {
+                    let file = document!.documents.first!
+                    var mdata = data
+                    mdata[Constants.MessageFields.name] = file[Constants.MessageFields.name] as! String
+                    if let photoURL = file[Constants.MessageFields.photoURL] as? String {
+                        mdata[Constants.MessageFields.photoURL] = photoURL
+                    }
+                    
+                    let preferences = UserDefaults.standard
 
-        let currentLevelKey = "user_id"
-        if preferences.object(forKey: currentLevelKey) == nil {
-            //  Doesn't exist
-        } else {
-            let currentLevel = preferences.string(forKey: currentLevelKey)
-            mdata[Constants.MessageFields.id] = currentLevel
+                    let currentLevelKey = "user_id"
+                    if preferences.object(forKey: currentLevelKey) == nil {
+                        //  Doesn't exist
+                    } else {
+                        let currentLevel = preferences.string(forKey: currentLevelKey)
+                        mdata[Constants.MessageFields.id] = currentLevel
+                    }
+                    
+                    mdata[Constants.MessageFields.timestamp] = "\(Int(Date().timeIntervalSince1970))"
+
+
+                    self.ref.addDocument(data: mdata)
+                }
+            })
         }
-        
-        mdata[Constants.MessageFields.timestamp] = "\(Int(Date().timeIntervalSince1970))"
-
-
-        self.ref.addDocument(data: mdata)
     }
     
 }

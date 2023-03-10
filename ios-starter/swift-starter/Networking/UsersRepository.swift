@@ -85,18 +85,21 @@ class UsersRepository {
                     file?.reference.updateData([Constants.MessageFields.photoURL: photoURL])
                 }
             })
-                
-//            ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid).addSnapshotListener({ [weak self] (snapshot, error) in
-//                guard let strongSelf = self else { return }
-//
-//                guard let snapshot = snapshot else {
-//                  print("Error fetching snapshot results: \(error!)")
-//                  return
-//                }
-//
-//                let document = snapshot.documents.first
-//                document?.reference.updateData([Constants.MessageFields.photoURL: photoURL])
-//          })
+        }
+    }
+    
+    func modifyUser(withName name: String){
+        if let user = Auth.auth().currentUser{
+            let referencia = db.collection("users").whereField(Constants.MessageFields.id, isEqualTo: user.uid)
+            referencia.getDocuments(completion:{ (document, err) in
+                if let err = err {
+                    print(err.localizedDescription)
+                }
+                else {
+                    let file = document?.documents.first
+                    file?.reference.updateData([Constants.MessageFields.name: name])
+                }
+            })
         }
     }
 }

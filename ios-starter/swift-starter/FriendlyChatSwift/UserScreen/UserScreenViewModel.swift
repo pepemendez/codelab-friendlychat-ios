@@ -62,6 +62,14 @@ class UserScreenViewModel: ViewModelType{
                 })
                 .mapToVoid()
                     
+        let nameTriggered = input.nameTrigger
+                .do(onNext: { [weak self] name in
+                    if let name = name, let strongSelf = self{
+                        strongSelf.userRepository.modifyUser(withName: name)
+                    }
+                })
+                .mapToVoid()
+                    
         let picker = UIImagePickerController()
 
         let imageTriggered = input.imageTrigger
@@ -127,6 +135,7 @@ class UserScreenViewModel: ViewModelType{
         return Output(triggered: triggered,
                       imageTrigerred: imageTriggered,
                       imageFetchedTrigerred: imageFetchedTriggered,
+                      nameTriggered: nameTriggered,
                       user: self.user.asDriverOnErrorJustComplete(),
                       error: self.errorTracker.asDriverOnErrorJustComplete())
     }

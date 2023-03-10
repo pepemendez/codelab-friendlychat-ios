@@ -14,12 +14,14 @@ struct UserScreenTypeInput {
     let trigger: Driver<Void>
     let imageTrigger: Driver<UIViewController>
     let imageFetched: Driver<[UIImagePickerController.InfoKey : Any]>
+    let nameTrigger: Driver<String?>
 }
 
 struct UserScreenTypeOutput {
     let triggered: Driver<Void>
     let imageTrigerred: Driver<Void>
     let imageFetchedTrigerred: Driver<UIImage?>
+    let nameTriggered: Driver<Void>
     let user: Driver<[String: String]>
     let error: Driver<String>?
 }

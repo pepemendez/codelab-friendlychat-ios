@@ -11,6 +11,26 @@ import RxCocoa
 import RxGesture
 import Firebase
 
+class UITextFieldWithPadding: UITextField {
+    var textPadding = UIEdgeInsets(
+        top: 0,
+        left: 12,
+        bottom: 0,
+        right: 12
+    )
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        let rect = super.textRect(forBounds: bounds)
+        return rect.inset(by: textPadding)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        let rect = super.editingRect(forBounds: bounds)
+        return rect.inset(by: textPadding)
+    }
+}
+
+
 class UserScreenView: UIView {
     let label = UILabel()
     let icon = UIImageView()
@@ -19,8 +39,29 @@ class UserScreenView: UIView {
     
     private let disposeBag = DisposeBag()
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
-    public var imageTapped: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
-
+    public var imageTapped: PublishSubject<Void> = PublishSubject()
+    public let sendSubject: PublishSubject<String?> = PublishSubject()
+    
+    lazy private var textField: UITextFieldWithPadding = {
+        let textField = UITextFieldWithPadding()
+        textField.clipsToBounds = true
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 18
+        textField.layer.masksToBounds = false
+        textField.placeholder = "Cambia aquí tú nombre"
+        textField.font = UIFont.systemFont(ofSize: 15.0)
+        return textField
+    }()
+    
+    private let sendButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Cambiar nombre", for: .normal)
+        button.tintColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1.0)
+        return button
+    }()
+    
+    
     public let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -55,10 +96,19 @@ class UserScreenView: UIView {
             .mapToVoid()
             .bind(to: imageTapped)
             .disposed(by: self.disposeBag)
-            
+                    
                 
         super.init(frame: .zero)
         self.setView()
+        
+        self.sendButton
+            .rx
+            .tap
+            .map{  _ in
+                return self.textField.text
+            }
+            .bind(to: sendSubject)
+            .disposed(by: self.disposeBag)
     }
     
     private func setView() {
@@ -68,11 +118,15 @@ class UserScreenView: UIView {
         addSubview(self.stackView)
         addSubview(self.imageView)
         addSubview(self.lblInstrucciones)
-        
+        addSubview(self.textField)
+        addSubview(self.sendButton)
+
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.setContentHuggingPriority(.defaultLow, for: .vertical)
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         self.lblInstrucciones.translatesAutoresizingMaskIntoConstraints = false
+        self.textField.translatesAutoresizingMaskIntoConstraints = false
+        self.sendButton.translatesAutoresizingMaskIntoConstraints = false
 
         let constraints = [
             //
@@ -88,7 +142,16 @@ class UserScreenView: UIView {
             //
             self.lblInstrucciones.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.lblInstrucciones.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.lblInstrucciones.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -18)
+            self.lblInstrucciones.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -18),
+            //
+//            self.textField.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
+            self.textField.heightAnchor.constraint(equalToConstant: 30),
+            self.textField.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            self.textField.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            self.textField.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 18),
+            //
+            self.sendButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            self.sendButton.topAnchor.constraint(equalTo: self.textField.bottomAnchor, constant: 4)
         ]
         self.addConstraints(constraints)
         bindModel()
@@ -118,6 +181,8 @@ class UserScreenView: UIView {
                }
              }.resume()
         }
+        
+        self.textField.placeholder = userData[Constants.MessageFields.name]
         
         self.label.text = userData[Constants.MessageFields.name]
         self.label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
