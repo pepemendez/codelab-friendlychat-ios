@@ -89,5 +89,16 @@ Opcionales que me gustaría implementar
 </li>
 </ul>
 
+<br/>
+<br/>
+
+El proyecto se probó en iOS 16.3 en un iPad 6ta generación y en simulador de iPhone 11 iOS 16.2,
+no se tuvo posibilidad de probar en un iPhone real debido a limitaciones de la cuenta de developer.
+
+<br/>
+
+El proyecto se realizó en una Macbook Pro, M2 2022 en el OS Monterrey 12.6.1
+
+
 ## License
 See [LICENSE](LICENSE)
