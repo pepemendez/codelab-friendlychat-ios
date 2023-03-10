@@ -30,11 +30,15 @@ adicional sobre las decisiones de diseño y la estructura del código.<span styl
 
 Adicionales incluidos en el proyecto:
 <br/>
-● Se debe de soportar iOS 13 o superior.<br/>
-● Se debe de ocupar XCode 13 o superior.<br/>
-● Se debe de ocupar Swift 5.<br/>
-● El código fuente se debe de subir en un servidor público de GIT (GitHub/BitBucket/etc...).<br/>
-● Se consideran 3 días(fin de semana) para esta prueba.<br/>
+
+<ul>
+<li>Se debe de soportar iOS 13 o superior.</li>
+<li>Se debe de ocupar XCode 13 o superior.</li>
+<li>Se debe de ocupar Swift 5.</li>
+<li>El código fuente se debe de subir en un servidor público de GIT (GitHub/BitBucket/etc...)</li>
+<li>Se consideran 3 días(fin de semana) para esta prueba.</li>
+
+</ul>
 
 
 Consideraciones
