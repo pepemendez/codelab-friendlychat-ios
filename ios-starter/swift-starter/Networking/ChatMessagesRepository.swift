@@ -15,14 +15,26 @@ import RxCocoa
 class ChatMessagesRepository {
     let db = Firestore.firestore()
     private var ref: CollectionReference!
-    private var messages: PublishSubject<[String : Any]> = PublishSubject<[String : Any]>()
+    private var messages: PublishSubject<[ChatMessage]> = PublishSubject<[ChatMessage]>()
     
     init(){
     }
     
-    func getMessages(byRoomId room: String) -> Observable<[String: Any]>{
+    func getMessages(byRoomId room: String) -> Observable<[ChatMessage]>{
         db.clearPersistence()
         ref = db.collection("messages").document(room).collection("messages")
+        
+        let preferences = UserDefaults.standard
+
+        let currentLevelKey = "user_id"
+        var currentLevel = ""
+
+        if preferences.object(forKey: currentLevelKey) == nil {
+            //  Doesn't exist
+        } else {
+            currentLevel = preferences.string(forKey: currentLevelKey)!
+        }
+        
         ref.addSnapshotListener({ [weak self] (snapshot, error) in
             guard let strongSelf = self else { return }
 
@@ -31,26 +43,27 @@ class ChatMessagesRepository {
               return
             }
             
-            let _ = snapshot.documentChanges.map { (document) in
-                if(document.type == .added){
-                    
-                    var documentData = document.document.data()
-                    
-                    let preferences = UserDefaults.standard
-
-                    let currentLevelKey = "user_id"
-                    if preferences.object(forKey: currentLevelKey) == nil {
-                        //  Doesn't exist
-                    } else {
-                        let currentLevel = preferences.string(forKey: currentLevelKey)
-                        if(currentLevel == (documentData[Constants.MessageFields.id] as? String)){
-                            documentData["isMine"] = "true"
-                        }
-                    }
-                    
-                    strongSelf.messages.onNext(documentData)
+            var mapped = snapshot.documents.compactMap { document -> ChatMessage? in
+                do{
+                    let timestamp = Date(timeIntervalSince1970: Double((document.data()[Constants.MessageFields.timestamp] as? String) ?? "0")!)
+                    let user_id = (document.data()[Constants.MessageFields.id] as? String)
+                    return ChatMessage(id: "\(UUID())",
+                                       name: document.data()[Constants.MessageFields.name] as? String,
+                                       photoURL: document.data()[Constants.MessageFields.photoURL] as? String,
+                                       imageURL: document.data()[Constants.MessageFields.imageURL] as? String,
+                                       text: document.data()[Constants.MessageFields.text] as? String,
+                                       timestamp: timestamp,
+                                       user_id: document.data()[Constants.MessageFields.id] as! String,
+                                       isMine: currentLevel == (document.data()[Constants.MessageFields.id] as! String))
+                } catch {
+                    print("Error decoding document: \(error)")
+                    return nil
                 }
             }
+            
+            mapped.sort{ $0.timestamp < $1.timestamp }
+            
+            strongSelf.messages.onNext(mapped)
           })
         
         return messages;

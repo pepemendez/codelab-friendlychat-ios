@@ -10,9 +10,11 @@ import Foundation
 
 struct ChatMessage: Identifiable, Codable {
     var id: String
-    var name: String
-    var photoURL: String
-    var text: String
+    var name: String?
+    var photoURL: String?
+    var imageURL: String?
+    var text: String?
     var timestamp: Date
     var user_id: String
+    var isMine: Bool = false
 }

@@ -17,20 +17,10 @@ class TextFieldWithPadding: UITextView {
         bottom: 0,
         right: 8
     )
-
-//    override func textRect(forBounds bounds: CGRect) -> CGRect {
-//        let rect = super.textRect(forBounds: bounds)
-//        return rect.inset(by: textPadding)
-//    }
-//
-//    override func editingRect(forBounds bounds: CGRect) -> CGRect {
-//        let rect = super.editingRect(forBounds: bounds)
-//        return rect.inset(by: textPadding)
-//    }
 }
 
 class ChatMessagesView: UIView {
-    public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
+    public var dataModel: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
     public var selectedTrigger: Driver<ControlEvent<IndexPath>.Element>
     private let disposeBag = DisposeBag()
     public let photoSubject: PublishSubject<Void> = PublishSubject()
@@ -133,13 +123,14 @@ class ChatMessagesView: UIView {
     
     private func bindModel() {
         let _ = self.dataModel
+            .do(onNext: { _ in
+                    self.tableView.setContentOffset(CGPoint(x: 0, y : CGFloat.greatestFiniteMagnitude), animated: true)
+                 })
             .bind(to: tableView.rx
                 .items(cellIdentifier: "Cell", cellType: ChatMessagesViewCell.self))
             { index, element, cell in
-
-                guard let message = element as? [String:String] else { return }
-                cell.setView(message: message)
-                if let imageURL = message[Constants.MessageFields.imageURL] {
+                cell.setView(message: element)
+                if let imageURL = element.photoURL {
                     if imageURL.hasPrefix("gs://") {
                         Storage.storage().reference(forURL: imageURL).getData(maxSize: INT64_MAX) {(data, error) in
                           if let error = error {

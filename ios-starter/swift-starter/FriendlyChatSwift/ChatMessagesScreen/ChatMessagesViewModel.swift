@@ -24,7 +24,7 @@ class ChatMessagesViewModel: ViewModelType{
     private let chatId: String
     private var chatMessage: String = ""
     
-    public var messages: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
+    public var messages: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
 
     init(navigator: ChatNavigatorProtocol, chatId: String) {
         self.chatId = chatId
@@ -38,9 +38,7 @@ class ChatMessagesViewModel: ViewModelType{
                     self.repository
                         .getMessages(byRoomId: self.chatId)
                         .do(onNext: { message in
-                            var newMessages = self.messages.value
-                            newMessages.append(message)
-                            self.messages.accept(newMessages)
+                            self.messages.accept(message)
                         })
                         .asObservable()
                         .asDriverOnErrorJustComplete()

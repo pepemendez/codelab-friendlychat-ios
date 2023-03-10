@@ -12,6 +12,8 @@ class ChatMessagesViewCell: UITableViewCell {
     
     private var isMine = false
 
+    private let container = UIView()
+
     public let icon: UIImageView = {
         let icon = UIImageView(image: UIImage(named: "checked_icon"))
         icon.backgroundColor = .green
@@ -48,6 +50,7 @@ class ChatMessagesViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setView()
+        self.constraintView()
     }
 
     required init?(coder _: NSCoder) {
@@ -55,9 +58,9 @@ class ChatMessagesViewCell: UITableViewCell {
     }
     
     public func dateFromNow(date: Date) -> String {
-        var dateFormatter = DateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.locale =  Locale(identifier: "es_MX")
-        var distance = Calendar.current.numberOfDaysBetween(date, and: Date())
+        let distance = Calendar.current.numberOfDaysBetween(date, and: Date())
         if(distance < 1){
             dateFormatter.dateFormat = "hh:mm a"
         } else if (distance < 2) {
@@ -74,30 +77,37 @@ class ChatMessagesViewCell: UITableViewCell {
         return dateFormatter.string(from: date)
     }
     
-    public func setView(message: [String: String]){
+    public func setView(message: ChatMessage){
         print(message)
-        let name = message[Constants.MessageFields.name] ?? ""
-        let timestamp = Date(timeIntervalSince1970: Double(message[Constants.MessageFields.timestamp] ?? "0")!)
+        let name = message.name ?? ""
+        let timestamp = message.timestamp
         lbltimestamp.text = dateFromNow(date: timestamp)
         
         self.isMine = false
-        if let isMine = message["isMine"]{
-            self.isMine = true
-        }
+        self.isMine = message.isMine
 
-        if let imageURL = message[Constants.MessageFields.imageURL] {
+
+        if let imageURL = message.imageURL {
           if imageURL.hasPrefix("gs://") {
             
-          } else if let URL = URL(string: imageURL), let data = try? Data(contentsOf: URL) {
-            icon.image = UIImage.init(data: data)
+          } else if let URL = URL(string: imageURL){//, let data = try? Data(contentsOf: URL) {
+              URLSession.shared.dataTask(with: URL) { [weak self](data, response, error) in
+                 guard let imageData = data else { return }
+                 DispatchQueue.main.async {
+                     self?.icon.image = UIImage.init(data: imageData)
+                     self?.icon.layer.masksToBounds = false
+                     self?.icon.layer.cornerRadius = 20
+                     self?.icon.clipsToBounds = true
+                 }
+               }.resume()
           }
           lblMessage.text = "sent by: \(name)"
         } else {
-          let text = message[Constants.MessageFields.text] ?? ""
+            let text = message.text ?? ""
             lblTitle.text = "\(name):"
             lblMessage.text = text
             icon.image = UIImage(named: "ic_account_circle")
-            if let photoURL = message[Constants.MessageFields.photoURL], let URL = URL(string: photoURL){
+            if let photoURL = message.photoURL, let URL = URL(string: photoURL){
                 URLSession.shared.dataTask(with: URL) { [weak self](data, response, error) in
                    guard let imageData = data else { return }
                    DispatchQueue.main.async {
@@ -110,15 +120,12 @@ class ChatMessagesViewCell: UITableViewCell {
             }
           }
         
-        setView()
+        constraintView()
     }
     
-
     private func setView() {
         self.backgroundColor = .clear
-        let container = UIView()
         container.clipsToBounds = true
-        container.backgroundColor = self.isMine ? UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1) :  UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
         container.layer.masksToBounds = false
         container.layer.cornerRadius = 20
         container.clipsToBounds = true
@@ -128,8 +135,14 @@ class ChatMessagesViewCell: UITableViewCell {
         container.addSubview(self.icon)
         container.addSubview(self.lblTitle)
         container.addSubview(self.lblMessage)
+    }
+    
+
+    private func constraintView() {
+        self.container.backgroundColor = self.isMine ? UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1)
+                                                        :  UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
         
-        for _view in [self, container, self.icon, self.lbltimestamp, lblTitle, lblMessage] {
+        for _view in [self, self.container, self.icon, self.lbltimestamp, lblTitle, lblMessage] {
             for constraint in _view.constraints {
                 if let first = constraint.firstItem as? UIView, first == self {
                     _view.removeConstraint(constraint)
@@ -141,7 +154,7 @@ class ChatMessagesViewCell: UITableViewCell {
             }
         }
         
-        container.translatesAutoresizingMaskIntoConstraints = false
+        self.container.translatesAutoresizingMaskIntoConstraints = false
         self.icon.translatesAutoresizingMaskIntoConstraints = false
         self.lbltimestamp.translatesAutoresizingMaskIntoConstraints = false
         self.lblTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -151,12 +164,11 @@ class ChatMessagesViewCell: UITableViewCell {
         
         let constraints = [
             //
-            container.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
-
-            container.leadingAnchor.constraint(equalTo:   self.leadingAnchor    , constant: self.isMine ? 90 : 20),
-            container.trailingAnchor.constraint(equalTo:  self.trailingAnchor   , constant: self.isMine ? -20 : -90),
-            container.topAnchor.constraint(equalTo:       self.topAnchor        , constant: 10),
-            container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -20),
+            self.container.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            self.container.leadingAnchor.constraint(equalTo:   self.leadingAnchor    , constant: self.isMine ? 90 : 20),
+            self.container.trailingAnchor.constraint(equalTo:  self.trailingAnchor   , constant: self.isMine ? -20 : -90),
+            self.container.topAnchor.constraint(equalTo:       self.topAnchor        , constant: 10),
+            self.container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -20),
             //
             self.icon.heightAnchor.constraint(equalToConstant: 40),
             self.icon.widthAnchor.constraint(equalToConstant: 40),
