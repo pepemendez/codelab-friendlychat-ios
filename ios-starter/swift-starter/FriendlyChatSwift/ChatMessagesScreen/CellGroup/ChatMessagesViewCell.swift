@@ -64,7 +64,7 @@ class ChatMessagesViewCell: UITableViewCell {
         if(distance < 1){
             dateFormatter.dateFormat = "hh:mm a"
         } else if (distance < 2) {
-            dateFormatter.dateFormat = "ayer"
+            return "ayer"
         }
         else if (distance < 7) {
             dateFormatter.dateFormat = "EEEE"

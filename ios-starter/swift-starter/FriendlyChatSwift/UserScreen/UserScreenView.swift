@@ -28,7 +28,7 @@ class UserScreenView: UIView {
         stackView.distribution = .fill
         stackView.spacing = 8
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0,right: 16)
+        stackView.layoutMargins = UIEdgeInsets(top: 20, left: 16, bottom: 0,right: 16)
         return stackView
     }()
     
@@ -36,6 +36,15 @@ class UserScreenView: UIView {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         return imageView
+    }()
+    
+    public let lblInstrucciones: UILabel = {
+        let label = UILabel()
+        label.text = "Presiona la imagen para tomar una nueva foto de perfil"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.numberOfLines = 0
+        return label
     }()
     
     init() {
@@ -53,26 +62,33 @@ class UserScreenView: UIView {
     }
     
     private func setView() {
-        backgroundColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1.0)
+        backgroundColor = .white
+        stackView.backgroundColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1.0)
         
         addSubview(self.stackView)
         addSubview(self.imageView)
+        addSubview(self.lblInstrucciones)
         
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.setContentHuggingPriority(.defaultLow, for: .vertical)
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
-        
+        self.lblInstrucciones.translatesAutoresizingMaskIntoConstraints = false
+
         let constraints = [
             //
             self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.stackView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
-            self.stackView.heightAnchor.constraint(equalToConstant: 60),
+            self.stackView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0),
+            self.stackView.heightAnchor.constraint(equalToConstant: 90),
             //
             self.imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
             self.imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
             self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            //
+            self.lblInstrucciones.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.lblInstrucciones.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.lblInstrucciones.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -18)
         ]
         self.addConstraints(constraints)
         bindModel()
@@ -105,7 +121,7 @@ class UserScreenView: UIView {
         
         self.label.text = userData[Constants.MessageFields.name]
         self.label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        self.labeltext.text = "Mis chats"
+        self.labeltext.text = "Modificar información"
         self.labeltext.textColor = .white
         self.labeltext.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
