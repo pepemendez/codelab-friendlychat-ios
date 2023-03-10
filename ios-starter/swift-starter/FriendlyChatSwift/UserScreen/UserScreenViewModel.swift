@@ -70,10 +70,10 @@ class UserScreenViewModel: ViewModelType{
                 })
                 .mapToVoid()
                     
-        let picker = UIImagePickerController()
 
         let imageTriggered = input.imageTrigger
                     .map{ parent -> Void in
+                        let picker = UIImagePickerController()
                         picker.delegate = (parent as! any UIImagePickerControllerDelegate & UINavigationControllerDelegate)
                         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
                           picker.sourceType = UIImagePickerController.SourceType.camera
@@ -130,6 +130,15 @@ class UserScreenViewModel: ViewModelType{
                 return info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
             }
             .asDriver()
+        
+        let closeTriggered = input
+            .closeTrigger
+            .do(onNext: {
+                print("closeTriggered")
+                self.navigator.logOut()
+            })
+            .mapToVoid()
+            .asDriver()
             
                     
         return Output(triggered: triggered,
@@ -137,6 +146,7 @@ class UserScreenViewModel: ViewModelType{
                       imageFetchedTrigerred: imageFetchedTriggered,
                       nameTriggered: nameTriggered,
                       user: self.user.asDriverOnErrorJustComplete(),
+                      closeTriggered: closeTriggered,
                       error: self.errorTracker.asDriverOnErrorJustComplete())
     }
 }

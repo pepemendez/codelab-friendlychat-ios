@@ -41,7 +41,8 @@ class UserScreenView: UIView {
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
     public var imageTapped: PublishSubject<Void> = PublishSubject()
     public let sendSubject: PublishSubject<String?> = PublishSubject()
-    
+    public let closeSubject: PublishSubject<Void> = PublishSubject()
+
     lazy private var textField: UITextFieldWithPadding = {
         let textField = UITextFieldWithPadding()
         textField.clipsToBounds = true
@@ -58,6 +59,13 @@ class UserScreenView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("Cambiar nombre", for: .normal)
         button.tintColor = UIColor(red: 162/255, green: 191/255, blue: 117/255, alpha: 1.0)
+        return button
+    }()
+    
+    private let closeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Cerrar Sesión", for: .normal)
+        button.tintColor = .red
         return button
     }()
     
@@ -109,6 +117,29 @@ class UserScreenView: UIView {
             }
             .bind(to: sendSubject)
             .disposed(by: self.disposeBag)
+        
+        self.closeButton
+            .rx
+            .tap
+            .mapToVoid()
+            .bind(to: closeSubject)
+            .disposed(by: self.disposeBag)
+        
+        self.sendButton
+            .rx
+            .isEnabled
+            
+        
+        let loginValidation = textField
+            .rx
+            .text
+            .map({!(($0?.isEmpty ?? true) || ($0 != nil && $0!.count < 5))})
+
+
+
+        let buttonvalidation = loginValidation
+                                .bind(to: sendButton.rx.isEnabled)
+                                .disposed(by: self.disposeBag)
     }
     
     private func setView() {
@@ -120,6 +151,7 @@ class UserScreenView: UIView {
         addSubview(self.lblInstrucciones)
         addSubview(self.textField)
         addSubview(self.sendButton)
+        addSubview(self.closeButton)
 
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         self.stackView.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -127,6 +159,7 @@ class UserScreenView: UIView {
         self.lblInstrucciones.translatesAutoresizingMaskIntoConstraints = false
         self.textField.translatesAutoresizingMaskIntoConstraints = false
         self.sendButton.translatesAutoresizingMaskIntoConstraints = false
+        self.closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         let constraints = [
             //
@@ -136,22 +169,26 @@ class UserScreenView: UIView {
             self.stackView.heightAnchor.constraint(equalToConstant: 90),
             //
             self.imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
-            self.imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
+            self.imageView.widthAnchor.constraint(greaterThanOrEqualTo: self.widthAnchor, multiplier: 0.5),
             self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 350),
             //
             self.lblInstrucciones.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.lblInstrucciones.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.lblInstrucciones.bottomAnchor.constraint(equalTo: self.imageView.topAnchor, constant: -18),
             //
 //            self.textField.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
-            self.textField.heightAnchor.constraint(equalToConstant: 30),
+            self.textField.heightAnchor.constraint(equalToConstant: 35),
             self.textField.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             self.textField.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             self.textField.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 18),
             //
             self.sendButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
-            self.sendButton.topAnchor.constraint(equalTo: self.textField.bottomAnchor, constant: 4)
+            self.sendButton.topAnchor.constraint(equalTo: self.textField.bottomAnchor, constant: 4),
+            //
+            self.closeButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            self.closeButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ]
         self.addConstraints(constraints)
         bindModel()

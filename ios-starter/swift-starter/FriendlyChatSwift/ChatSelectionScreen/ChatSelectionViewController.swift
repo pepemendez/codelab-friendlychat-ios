@@ -39,7 +39,6 @@ class ChatSelectionViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated:true)
-        self.title = "Mis chats"
     }
 
     override func viewDidLoad() {

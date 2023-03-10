@@ -68,13 +68,22 @@ class UserScreenViewController: UIViewController {
         let nameTrigger = self.mainView.sendSubject
             .asDriverOnErrorJustComplete()
         
+        let closeTrigger = self.mainView.closeSubject
+            .asDriverOnErrorJustComplete()
+        
         
         let input = UserScreenTypeInput(trigger: viewWillAppear,
                                         imageTrigger: imageTrigger,
                                         imageFetched: mediaResponded,
-                                        nameTrigger: nameTrigger)
+                                        nameTrigger: nameTrigger,
+                                        closeTrigger: closeTrigger)
         
         let output = self.viewModel.transform(input: input)
+        
+        output
+            .closeTriggered
+            .drive()
+            .disposed(by: self.disposeBag)
         
         output
             .nameTriggered
@@ -116,18 +125,7 @@ func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
 
 extension UserScreenViewController :  UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
 
         picker.dismiss(animated: true, completion:nil)
     }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-    return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
-    return input.rawValue
 }

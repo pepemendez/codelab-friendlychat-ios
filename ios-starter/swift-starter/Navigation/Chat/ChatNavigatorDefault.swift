@@ -37,4 +37,10 @@ class ChatNavigatorDefault: ChatNavigatorProtocol{
     func Error() {
         fatalError("Error() has not been implemented")
     }
+    
+    func logOut(){
+        self.navigationController.dismiss(animated: true){
+            self.navigationController.popToRootViewController(animated: true)
+        }
+    }
 }

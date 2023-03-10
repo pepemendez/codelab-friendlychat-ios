@@ -14,7 +14,6 @@ import RxCocoa
 
 class UsersRepository {
     let db = Firestore.firestore()
-    var listener : ListenerRegistration!
     private var ref: CollectionReference!
     private var user: PublishSubject<[String : Any]?> = PublishSubject<[String : Any]?>()
 
@@ -22,40 +21,34 @@ class UsersRepository {
         db.clearPersistence()
     }
     
-    deinit{
-        listener.remove()
-    }
-
     
     func getUser() -> Observable<[String: Any]?>{
         if let user = Auth.auth().currentUser{
             ref = db.collection("users")
             
-            if listener == nil {
-                listener = ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid).addSnapshotListener({ [weak self] (snapshot, error) in
-                    guard let strongSelf = self else { return }
+            ref.whereField(Constants.MessageFields.id, isEqualTo: user.uid).addSnapshotListener({ [weak self] (snapshot, error) in
+                guard let strongSelf = self else { return }
+                
+                guard let snapshot = snapshot else {
+                    print("Error fetching snapshot results: \(error!)")
+                    return
+                }
+                
+                if snapshot.documentChanges.count == 0 {
+                    print("user not found, creating user")
+                    self?.createUser()
+                }
+                
+                let _ = snapshot.documentChanges.map { (document) in
                     
-                    guard let snapshot = snapshot else {
-                        print("Error fetching snapshot results: \(error!)")
-                        return
-                    }
+                    let preferences = UserDefaults.standard
                     
-                    if snapshot.documentChanges.count == 0 {
-                        print("user not found, creating user")
-                        self?.createUser()
-                    }
-                    
-                    let _ = snapshot.documentChanges.map { (document) in
-                        
-                        let preferences = UserDefaults.standard
-                        
-                        let currentLevel = document.document.data()["user_id"]
-                        let currentLevelKey = "user_id"
-                        preferences.set(currentLevel, forKey: currentLevelKey)
-                        strongSelf.user.onNext(document.document.data())
-                    }
-                })
-            }
+                    let currentLevel = document.document.data()["user_id"]
+                    let currentLevelKey = "user_id"
+                    preferences.set(currentLevel, forKey: currentLevelKey)
+                    strongSelf.user.onNext(document.document.data())
+                }
+            })
         }
         
         return user;

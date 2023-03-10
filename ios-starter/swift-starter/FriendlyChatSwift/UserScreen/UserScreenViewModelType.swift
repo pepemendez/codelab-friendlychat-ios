@@ -15,6 +15,7 @@ struct UserScreenTypeInput {
     let imageTrigger: Driver<UIViewController>
     let imageFetched: Driver<[UIImagePickerController.InfoKey : Any]>
     let nameTrigger: Driver<String?>
+    let closeTrigger: Driver<Void>
 }
 
 struct UserScreenTypeOutput {
@@ -23,5 +24,6 @@ struct UserScreenTypeOutput {
     let imageFetchedTrigerred: Driver<UIImage?>
     let nameTriggered: Driver<Void>
     let user: Driver<[String: String]>
+    let closeTriggered: Driver<Void>
     let error: Driver<String>?
 }

@@ -12,4 +12,5 @@ protocol ChatNavigatorProtocol {
     func goToChat(id: String, chatTitle: String)
     func goToUser()
     func Error()
+    func logOut()
 }
