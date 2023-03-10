@@ -83,6 +83,8 @@ class UserScreenView: UIView {
     
     public let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         return imageView
     }()
@@ -170,9 +172,11 @@ class UserScreenView: UIView {
             //
             self.imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
             self.imageView.widthAnchor.constraint(greaterThanOrEqualTo: self.widthAnchor, multiplier: 0.5),
+            self.imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20),
+            self.imageView.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -20),
             self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 350),
+//            self.imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 350),
             //
             self.lblInstrucciones.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.lblInstrucciones.trailingAnchor.constraint(equalTo: self.trailingAnchor),

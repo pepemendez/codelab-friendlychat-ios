@@ -65,6 +65,8 @@ class ChatSelectionView: UIView {
 
         self.tableView.register(ChatSelectionViewCell.self, forCellReuseIdentifier: "Cell")
         
+        self.tableView.automaticallyAdjustsScrollIndicatorInsets = false
+        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         self.tableView.separatorStyle = .none
         self.tableView.bounces = false
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,8 +142,9 @@ class ChatSelectionView: UIView {
             .bind(to: tableView.rx
                 .items(cellIdentifier: "Cell", cellType: ChatSelectionViewCell.self))
             { index, element, cell in
-                cell.lblTitle.text = element["name"] as? String
-                cell.lblMessage.text = element["active_users"] as? String
+                cell.setView(isPublic: element["isPublic"] as! Bool,
+                             name: element["name"] as! String,
+                             aditional:  element["active_users"] as! String)
             }
             .disposed(by: self.disposeBag)
         

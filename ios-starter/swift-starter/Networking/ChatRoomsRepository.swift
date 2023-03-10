@@ -44,7 +44,9 @@ class ChatRoomsRepository {
                             
                             var dictionary: [String: Any] =
                             ["name": document.document.documentID]
-                            dictionary["isPublic"] = true
+//                            print(document.document.data())
+//                            print(
+                            dictionary["isPublic"] = (document.document.data()["isPublic"] as! Int) == 1
                             dictionary["id"] = document.document.data()["id"]
                             if let active_users = (snapshot.data()?["users"] as? NSArray)?.count {
                                 dictionary["active_users"] = "\(active_users) usuarios activos"
@@ -53,6 +55,7 @@ class ChatRoomsRepository {
                                 dictionary["active_users"] = "Público"
                             }
                             
+                            print(dictionary)
                             var newMessages = strongSelf.chatRooms.value
                             newMessages.append(dictionary)
                             strongSelf.chatRooms.accept(newMessages)
