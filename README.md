@@ -51,7 +51,11 @@ Consideraciones
 <p align="center">
   <img src="imagenes/IMG_0001.PNG"  width="750"/>
 </p>
-
+</li>
+<li>Como funcionalidad añadida se muestran las imagenes de los usuarios, estas se almacenan al momento de enviar el mensaje, por tanto, cuando el usuario actualiza su imagen de perfil o su nombre, no se ve reflejado en la conversación
+<p align="center">
+  <img src="imagenes/IMG_0002.PNG"  width="750"/>
+</p>
 </li>
 </ul>
 
