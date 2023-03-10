@@ -49,7 +49,7 @@ Consideraciones
 <li>Para correr el proyecto es necesario ir a la ruta /ios-starter/swift-starter</li>
 <li>Se consideran chats publicos y privados, por tanto los usuarios que ingresen a la aplicación no podran ver los chats privados (o no deberían)
 <p align="center">
-  <img src="imagenes/IMG_0001.png"  width="250"/>
+  <img src="imagenes/IMG_0001.PNG"  width="250"/>
 </p>
 
 </li>
