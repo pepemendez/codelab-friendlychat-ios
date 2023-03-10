@@ -41,6 +41,13 @@ class UsersRepository {
                 
                 let _ = snapshot.documentChanges.map { (document) in
                     if(document.type == .added){
+                        print(document.document.data())
+                        
+                        let preferences = UserDefaults.standard
+
+                        let currentLevel = document.document.data()["user_id"]
+                        let currentLevelKey = "user_id"
+                        preferences.set(currentLevel, forKey: currentLevelKey)
                         strongSelf.user.onNext(document.document.data())
                     }
                 }

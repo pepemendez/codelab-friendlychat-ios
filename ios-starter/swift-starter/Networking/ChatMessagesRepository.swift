@@ -47,6 +47,19 @@ class ChatMessagesRepository {
         if let photoURL = Auth.auth().currentUser?.photoURL {
           mdata[Constants.MessageFields.photoURL] = photoURL.absoluteString
         }
+        
+        let preferences = UserDefaults.standard
+
+        let currentLevelKey = "user_id"
+        if preferences.object(forKey: currentLevelKey) == nil {
+            //  Doesn't exist
+        } else {
+            let currentLevel = preferences.string(forKey: currentLevelKey)
+            mdata[Constants.MessageFields.id] = currentLevel
+        }
+        
+        mdata[Constants.MessageFields.timestamp] = "\(Int(Date().timeIntervalSince1970))"
+
 
         self.ref.addDocument(data: mdata)
     }

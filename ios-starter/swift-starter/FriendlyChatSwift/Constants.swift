@@ -26,6 +26,7 @@ struct Constants {
   }
 
   struct MessageFields {
+    static let timestamp = "timestamp"
     static let id = "user_id"
     static let name = "name"
     static let text = "text"

@@ -32,12 +32,16 @@ class ChatMessagesViewCell: UITableViewCell {
         message.numberOfLines = 0
         return message
     }()
-
-    private let divider: UIView = {
-        let view = UIView()
-        return view
+    
+    public let lbltimestamp: UILabel = {
+        let title = UILabel()
+        title.text = "hola"
+        title.isEnabled = false
+        title.numberOfLines = 1
+        title.textAlignment = .right
+        return title
     }()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setView()
@@ -47,8 +51,32 @@ class ChatMessagesViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func dateFromNow(date: Date) -> String {
+        var dateFormatter = DateFormatter()
+        dateFormatter.locale =  Locale(identifier: "es_MX")
+        var distance = Calendar.current.numberOfDaysBetween(date, and: Date())
+        if(distance < 1){
+            dateFormatter.dateFormat = "hh:mm a"
+        } else if (distance < 2) {
+            dateFormatter.dateFormat = "ayer"
+        }
+        else if (distance < 7) {
+            dateFormatter.dateFormat = "EEEE"
+        }
+        else{
+            dateFormatter.dateFormat = "MMMM dd"
+
+        }
+        
+        return dateFormatter.string(from: date)
+    }
+    
     public func setView(message: [String: String]){
+        print(message)
         let name = message[Constants.MessageFields.name] ?? ""
+        let timestamp = Date(timeIntervalSince1970: Double(message[Constants.MessageFields.timestamp] ?? "0")!)
+        lbltimestamp.text = dateFromNow(date: timestamp)
+
         if let imageURL = message[Constants.MessageFields.imageURL] {
           if imageURL.hasPrefix("gs://") {
             
@@ -84,16 +112,16 @@ class ChatMessagesViewCell: UITableViewCell {
         container.layer.cornerRadius = 20
         container.clipsToBounds = true
         addSubview(container)
-        
+        addSubview(self.lbltimestamp)
+
 
         container.addSubview(self.icon)
         container.addSubview(self.lblTitle)
         container.addSubview(self.lblMessage)
-        container.addSubview(self.divider)
         
         container.translatesAutoresizingMaskIntoConstraints = false
         self.icon.translatesAutoresizingMaskIntoConstraints = false
-        self.divider.translatesAutoresizingMaskIntoConstraints = false
+        self.lbltimestamp.translatesAutoresizingMaskIntoConstraints = false
         self.lblTitle.translatesAutoresizingMaskIntoConstraints = false
         self.lblMessage.translatesAutoresizingMaskIntoConstraints = false
         self.lblMessage.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -107,7 +135,7 @@ class ChatMessagesViewCell: UITableViewCell {
             container.leadingAnchor.constraint(equalTo:   self.leadingAnchor    , constant: 20),
             container.trailingAnchor.constraint(equalTo:  self.trailingAnchor   , constant: -20),
             container.topAnchor.constraint(equalTo:       self.topAnchor        , constant: 10),
-            container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -10),
+            container.bottomAnchor.constraint(equalTo:    self.bottomAnchor     , constant: -20),
             //
             self.icon.heightAnchor.constraint(equalToConstant: 40),
             self.icon.widthAnchor.constraint(equalToConstant: 40),
@@ -122,7 +150,11 @@ class ChatMessagesViewCell: UITableViewCell {
             self.lblMessage.topAnchor.constraint(equalTo: lblTitle.bottomAnchor, constant: 1),
             self.lblMessage.leadingAnchor.constraint(equalTo: lblTitle.leadingAnchor),
             self.lblMessage.trailingAnchor.constraint(equalTo: lblTitle.trailingAnchor, constant: 1),
-            self.lblMessage.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10)
+            self.lblMessage.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10),
+            //
+            self.lbltimestamp.topAnchor.constraint(equalTo: container.bottomAnchor),
+            self.lbltimestamp.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            self.lbltimestamp.trailingAnchor.constraint(equalTo: container.trailingAnchor),
         ]
         self.addConstraints(constraints)
     }
