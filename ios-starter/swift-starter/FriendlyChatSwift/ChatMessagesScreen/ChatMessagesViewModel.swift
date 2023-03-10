@@ -50,7 +50,6 @@ class ChatMessagesViewModel: ViewModelType{
         let sendTriggered =    input
             .sendTrigger
             .do(onNext:{
-                print("sendTriggered")
                 let data = [Constants.MessageFields.text:self.chatMessage]
 
                 self.repository
@@ -60,15 +59,11 @@ class ChatMessagesViewModel: ViewModelType{
                 
         let photoTriggered = input
             .photoTrigger
-            .do(onNext:{
-                print("photoTrigger")
-            })
             .asDriver()
                     
         let messageTriggered =  input
             .messageTrigger
             .do(onNext:{ msg in
-                print("messageTrigger \(msg)")
                 self.chatMessage = msg
             })
             .mapToVoid()

@@ -46,7 +46,6 @@ class UsersRepository {
                     }
                     
                     let _ = snapshot.documentChanges.map { (document) in
-                        print(document.document.data())
                         
                         let preferences = UserDefaults.standard
                         

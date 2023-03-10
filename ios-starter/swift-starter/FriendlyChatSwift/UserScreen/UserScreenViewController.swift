@@ -54,19 +54,12 @@ class UserScreenViewController: UIViewController {
                             .asDriverOnErrorJustComplete()
         
         let mediaResponded = rx.sentMessage(#selector(UIImagePickerControllerDelegate.imagePickerController(_:didFinishPickingMediaWithInfo:)))
-            .do(onNext:{ arg in
-                print("mediaResponded \(arg)")
-                
-            })
             .map({ (a) -> [UIImagePickerController.InfoKey : Any] in
                 return try castOrThrow(Dictionary<UIImagePickerController.InfoKey, AnyObject>.self, a[1])
             })
             .asDriverOnErrorJustComplete()
         
         let imageTrigger = self.mainView.imageTapped
-            .do(onNext:{
-                print("imageTriggered")
-            })
             .map{ _ in
                 return self as UIViewController
             }
@@ -96,7 +89,6 @@ class UserScreenViewController: UIViewController {
         output
             .user
             .drive(onNext: { user in
-                print("drive \(user)")
                 self.mainView.setUser(data: user)
             })
             .disposed(by: self.disposeBag)
@@ -124,48 +116,9 @@ func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
 
 extension UserScreenViewController :  UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        print("imagePickerController")
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
 
         picker.dismiss(animated: true, completion:nil)
-//            guard let uid = Auth.auth().currentUser?.uid else { return }
-//
-//            // if it's a photo from the library, not an image from the camera
-//            if #available(iOS 8.0, *), let referenceURL = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.referenceURL)] as? URL {
-//              let assets = PHAsset.fetchAssets(withALAssetURLs: [referenceURL], options: nil)
-//              let asset = assets.firstObject
-//              asset?.requestContentEditingInput(with: nil, completionHandler: { [weak self] (contentEditingInput, info) in
-//                let imageFile = contentEditingInput?.fullSizeImageURL
-//                let filePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\((referenceURL as AnyObject).lastPathComponent!)"
-//                  guard let strongSelf = self else { return }
-//                  strongSelf.storageRef.child(filePath)
-//                    .putFile(from: imageFile!, metadata: nil) { (metadata, error) in
-//                      if let error = error {
-//                        let nsError = error as NSError
-//                        print("Error uploading: \(nsError.localizedDescription)")
-//                        return
-//                      }
-//                      strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
-//                    }
-//              })
-//            } else {
-//              guard let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage else { return }
-//              let imageData = image.jpegData(compressionQuality: 0.8)
-//              guard let uid = Auth.auth().currentUser?.uid else { return }
-//              let imagePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
-//              let metadata = StorageMetadata()
-//              metadata.contentType = "image/jpeg"
-//              self.storageRef.child(imagePath)
-//                .putData(imageData!, metadata: metadata) { [weak self] (metadata, error) in
-//                  if let error = error {
-//                    print("Error uploading: \(error)")
-//                    return
-//                  }
-//                  guard let strongSelf = self else { return }
-//                  strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
-//              }
-//            }
-//          }
     }
 }
 

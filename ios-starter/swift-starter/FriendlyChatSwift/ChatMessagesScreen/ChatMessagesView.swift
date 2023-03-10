@@ -140,7 +140,7 @@ class ChatMessagesView: UIView {
                           DispatchQueue.main.async {
                             cell.icon.image = UIImage.init(data: data!)
                             cell.icon.layer.masksToBounds = false
-                            cell.icon.layer.cornerRadius = 0
+                            cell.icon.layer.cornerRadius = 20
                             cell.icon.clipsToBounds = true
                             cell.setNeedsLayout()
                           }
@@ -151,7 +151,6 @@ class ChatMessagesView: UIView {
         
         let _ = self.selectedTrigger
             .drive(onNext: { [weak self] indexPath in
-                print(indexPath)
                 self?.tableView.deselectRow(at: indexPath, animated: true)
             })
         

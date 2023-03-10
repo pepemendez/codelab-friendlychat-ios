@@ -78,7 +78,6 @@ class ChatMessagesViewCell: UITableViewCell {
     }
     
     public func setView(message: ChatMessage){
-        print(message)
         let name = message.name ?? ""
         let timestamp = message.timestamp
         lbltimestamp.text = dateFromNow(date: timestamp)
