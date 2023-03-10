@@ -16,8 +16,6 @@ class ChatMessagesViewCell: UITableViewCell {
 
     public let icon: UIImageView = {
         let icon = UIImageView(image: UIImage(named: "checked_icon"))
-        icon.backgroundColor = .green
-//        icon.backgroundColor = .clear
         return icon
     }()
 
