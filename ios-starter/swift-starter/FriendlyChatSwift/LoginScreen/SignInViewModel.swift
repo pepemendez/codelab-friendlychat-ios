@@ -43,6 +43,7 @@ class SignInViewModel: ViewModelType{
                 _ in
                 self.repository
                     .getUser()
+                    .take(1)
                     .do(onNext: { user in
                         if user != nil {
                             self.navigator.Logged()
@@ -51,7 +52,6 @@ class SignInViewModel: ViewModelType{
                     .asDriverOnErrorJustComplete()
                     .drive()
                     .disposed(by: self.disposeBag)
-                        
             })
         
         let triggered = input.trigger.do(onNext: {

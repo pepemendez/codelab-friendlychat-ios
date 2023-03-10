@@ -61,15 +61,7 @@ class UserScreenViewController: UIViewController {
             .map({ (a) -> [UIImagePickerController.InfoKey : Any] in
                 return try castOrThrow(Dictionary<UIImagePickerController.InfoKey, AnyObject>.self, a[1])
             })
-//            .map{ info in
-//                return info[1] as [UIImagePickerController.InfoKey : Any]
-////                return convertFromUIImagePickerControllerInfoKeyDictionary(info as! [(UIImagePickerController:[UIImagePickerController.InfoKey : Any])])
-//            }
             .asDriverOnErrorJustComplete()
-        //            .drive(onNext: { data in
-//                print("mediaResponded  drive \(data)")
-//            })
-//            .disposed(by: self.disposeBag)
         
         let imageTriggered = self.mainView.imageTapped
             .do(onNext:{

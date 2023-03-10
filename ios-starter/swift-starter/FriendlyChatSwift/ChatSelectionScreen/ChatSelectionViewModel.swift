@@ -21,23 +21,34 @@ class ChatSelectionViewModel: ViewModelType{
     private let errorTracker: PublishSubject<String> = PublishSubject<String>()
     private let navigator: ChatNavigatorProtocol
     private let repository: ChatRoomsRepository
-    
+    private let userRepository: UsersRepository
     public var chat: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
     public var user: PublishSubject<[String: String]> = PublishSubject<[String: String]>()
 
     init(navigator: ChatNavigatorProtocol) {
         self.navigator = navigator
         self.repository = ChatRoomsRepository()
+        self.userRepository = UsersRepository()
     }
     
     func transform(input: ChatSelectionTypeInput) -> ChatSelectionTypeOutput {
         var data = [String:String]()
-        let user = Auth.auth().currentUser
-        if let photoURL = user?.photoURL {
-            data[Constants.MessageFields.name] = user?.displayName
-            data[Constants.MessageFields.photoURL] = photoURL.absoluteString
-        }
-                
+        
+        self.userRepository
+            .getUser()
+            .do(onNext: { user in
+                if let info = user {
+                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
+                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
+                    
+                    self.user.onNext(data)
+                }
+            })
+            .throttle(.seconds(5), scheduler: MainScheduler.instance)
+            .asDriverOnErrorJustComplete()
+            .drive()
+            .disposed(by: self.disposeBag)
+        
         let triggered = input.trigger
                 .do(onNext: {
                     self.repository.chatRooms

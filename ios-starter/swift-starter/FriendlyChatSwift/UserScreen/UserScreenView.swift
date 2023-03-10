@@ -9,8 +9,14 @@ import Foundation
 import RxSwift
 import RxCocoa
 import RxGesture
+import Firebase
 
 class UserScreenView: UIView {
+    let label = UILabel()
+    let icon = UIImageView()
+    let labeltext = UILabel()
+    let stackViewHeader = UIStackView()
+    
     private let disposeBag = DisposeBag()
     public var dataModel: BehaviorRelay<[[String : Any]]> = BehaviorRelay(value: [])
     public var imageTapped: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
@@ -28,7 +34,7 @@ class UserScreenView: UIView {
     
     public let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .red
+        imageView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         return imageView
     }()
     
@@ -73,56 +79,56 @@ class UserScreenView: UIView {
     }
     
     public func setUser(data userData: [String: String]){
-        if let photoURL = userData[Constants.MessageFields.photoURL], let URL = URL(string: photoURL){
-            URLSession.shared.dataTask(with: URL) { (data, response, error) in
-               guard let imageData = data else { return }
+        if let photoURL = userData[Constants.MessageFields.photoURL], photoURL.hasPrefix("gs://"){
+            Storage.storage().reference(forURL: photoURL).getData(maxSize: INT64_MAX) {(data, error) in
+                if let error = error {
+                    print("Error downloading: \(error)")
+                    return
+                }
                DispatchQueue.main.async {
                    
-                   self.imageView.image = UIImage(data: imageData)
-                   
-                   let icon = UIImageView()
-                   icon.image = UIImage(data: imageData)
-                   icon.layer.masksToBounds = false
-                   icon.layer.cornerRadius = 30
-                   icon.clipsToBounds = true
-                   icon.alpha = 0
-                   icon.translatesAutoresizingMaskIntoConstraints = false
+                   self.imageView.image = UIImage(data: data!)
 
-                   
-                   let label = UILabel()
-                   label.text = userData[Constants.MessageFields.name]
-                   label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-                   let labeltext = UILabel()
-                   labeltext.text = "Editar información del usuario"
-                   labeltext.textColor = .white
-                   labeltext.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-                   
-                   let stackView = UIStackView()
-                   stackView.axis = .vertical
-                   stackView.alignment = .fill
-                   stackView.distribution = .fill
-                   
-                   self.stackView.addArrangedSubview(icon)
-                   self.stackView.addArrangedSubview(stackView)
-                   
-                   stackView.addArrangedSubview(label)
-                   stackView.addArrangedSubview(labeltext)
-                   
-
-                   let constraints = [
-                       //tableView
-                       icon.widthAnchor.constraint(equalToConstant: 60),
-                       icon.heightAnchor.constraint(equalToConstant: 60),
-                   ]
-                   self.addConstraints(constraints)
+                   self.icon.image = UIImage(data: data!)
+                   self.icon.layer.masksToBounds = false
+                   self.icon.layer.cornerRadius = 30
+                   self.icon.clipsToBounds = true
+                   self.icon.alpha = 0
+                   self.icon.translatesAutoresizingMaskIntoConstraints = false
 
                    UIView.animate(withDuration: 1) {
-                       icon.alpha = 1
+                       self.icon.alpha = 1
                    }
                }
              }.resume()
         }
+        
+        self.label.text = userData[Constants.MessageFields.name]
+        self.label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        self.labeltext.text = "Mis chats"
+        self.labeltext.textColor = .white
+        self.labeltext.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        
+        self.stackViewHeader.axis = .vertical
+        self.stackViewHeader.alignment = .fill
+        self.stackViewHeader.distribution = .fill
+        
+        self.stackView.addArrangedSubview(self.icon)
+        self.stackView.addArrangedSubview(self.stackViewHeader)
+        
+        self.stackViewHeader.addArrangedSubview(self.label)
+        self.stackViewHeader.addArrangedSubview(self.labeltext)
+        
+
+        let constraints = [
+            //tableView
+             self.icon.widthAnchor.constraint(equalToConstant: 60),
+             self.icon.heightAnchor.constraint(equalToConstant: 60),
+        ]
+        self.addConstraints(constraints)
+
     }
+    
     
     private func bindModel() {
     }

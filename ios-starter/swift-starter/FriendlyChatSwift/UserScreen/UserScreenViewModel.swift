@@ -37,11 +37,20 @@ class UserScreenViewModel: ViewModelType{
     
     func transform(input: UserScreenTypeInput) -> UserScreenTypeOutput {
         var data = [String:String]()
-        let user = Auth.auth().currentUser
-        if let photoURL = user?.photoURL {
-            data[Constants.MessageFields.name] = user?.displayName
-            data[Constants.MessageFields.photoURL] = photoURL.absoluteString
-        }
+        
+        self.userRepository
+            .getUser()
+            .do(onNext: { user in
+                if let info = user {
+                    data[Constants.MessageFields.name] = info[Constants.MessageFields.name] as! String
+                    data[Constants.MessageFields.photoURL] = info[Constants.MessageFields.photoURL] as? String
+                    
+                    self.user.onNext(data)
+                }
+            })
+            .asDriverOnErrorJustComplete()
+            .drive()
+            .disposed(by: self.disposeBag)
                 
         let triggered = input.trigger
                 .do(onNext: {
